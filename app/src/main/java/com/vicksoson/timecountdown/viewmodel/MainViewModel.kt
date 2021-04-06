@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vicksoson.timecountdown.R
 import com.vicksoson.timecountdown.models.ScheduleItems
+import kotlinx.coroutines.delay
 
 class MainViewModel : ViewModel() {
 
@@ -55,14 +56,13 @@ class MainViewModel : ViewModel() {
             minutes.value?.toLong()?.times(60000L)?.plus((seconds.value?.toLong()?.times(1000L)!!))
     }
 
-    fun setTaskText(task: String){
+    fun setTaskText(task: String) {
         _taskText.value = task
     }
 
-    fun paused(state: Boolean){
+    fun paused(state: Boolean) {
         _isPaused.value = state
     }
-
 
 
     fun resetValues() {
@@ -103,15 +103,15 @@ class MainViewModel : ViewModel() {
     }
 
 
-    fun addSchedule(taskName: String, mins: Int, secs: Int){
+    fun addSchedule(taskName: String, mins: Int, secs: Int) {
         var min = mins
         var sec = secs
-        if (mins > 60 && secs >= 60){
+        if (mins > 60 && secs >= 60) {
             min = 59
-        }else if (mins > 60 && secs < 60){
+        } else if (mins > 60 && secs < 60) {
             min = 60
         }
-        if (secs > 60){
+        if (secs > 60) {
             sec = 60
         }
         val time = min.times(60000L).plus(sec.times(1000L))
@@ -125,23 +125,23 @@ class MainViewModel : ViewModel() {
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
 
-                if(isPaused.value == false){
-                    val sound = MediaPlayer.create(context, R.raw.ding_sound)
-                    if (isEnabled.value == true) {
-                        sound.start()
-                    } else {
-                        sound.stop()
-                    }
-                    _isRunning.value = false
-                    _isFinished.value = true
-
+//                if(isPaused.value == false){
+                val sound = MediaPlayer.create(context, R.raw.ding_sound)
+                if (isEnabled.value == true) {
+                    sound.start()
+                } else {
+                    sound.stop()
                 }
+                cancel()
+                _isRunning.value = false
+                _isFinished.value = true
+//                }
 
             }
 
             override fun onTick(p0: Long) {
                 _currentTime.value = p0
-                if (_isPaused.value == true){
+                if (_isPaused.value == true) {
                     cancel()
                 }
             }
@@ -150,6 +150,7 @@ class MainViewModel : ViewModel() {
         _isRunning.value = true
         _isFinished.value = false
     }
+
     fun pauseTimer() {
         countdownTimer.cancel()
         _time.value = currentTime.value
@@ -158,21 +159,24 @@ class MainViewModel : ViewModel() {
 
     }
 
-    fun resumeTime(context: Context){
-        time.value?.let { startTimer(it, context) }
-        _isRunning.value = true
-        _isPaused.value = false
+    fun resumeTime(context: Context) {
+        if (time.value!! > 0) {
+            time.value?.let { startTimer(it, context) }
+            _isRunning.value = true
+            _isPaused.value = false
+        }
+
     }
 
 
-    fun startScheduleTime(schedule: Long, context: Context){
-        if(isRunning.value == true){
+    fun startScheduleTime(schedule: Long, context: Context) {
+        if (isRunning.value == true) {
             countdownTimer.cancel()
             _time.value = schedule
             time.value?.let { startTimer(it, context) }
             _isRunning.value = true
             _isPaused.value = false
-        }else{
+        } else {
             _time.value = schedule
             time.value?.let { startTimer(it, context) }
             _isRunning.value = true

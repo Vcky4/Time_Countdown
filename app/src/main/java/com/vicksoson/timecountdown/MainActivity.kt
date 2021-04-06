@@ -178,9 +178,11 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     mainViewModel.updateTime()
                     mainViewModel.time.observe(this, { time ->
-                        binding.timer.textSize = 120F
-                        mainViewModel.startTimer(time, applicationContext)
-                        mainViewModel.paused(false)
+                        if(time > 0){
+                            binding.timer.textSize = 120F
+                            mainViewModel.startTimer(time, applicationContext)
+                            mainViewModel.paused(false)
+                        }
                     })
                     mainViewModel.setTaskText("Quick countdown")
                 }
