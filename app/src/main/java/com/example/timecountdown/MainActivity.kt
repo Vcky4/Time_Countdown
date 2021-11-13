@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                 countdown_timer.cancel()
                 isRunning = false
             } else {
-                val time = findViewById<TextView>(R.id.time_edit_text).text.toString()
+                val time = fabView.findViewById<TextView>(R.id.time_edit_text).text.toString()
                 time_in_milli_seconds = time.toLong() * 60000L
                 startTimer(time_in_milli_seconds)
             }
