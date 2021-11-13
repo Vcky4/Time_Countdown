@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.example.timecountdown.databinding.ActivityMainBinding
@@ -31,29 +32,29 @@ class MainActivity : AppCompatActivity() {
         val alertDialog = builder.create()
 
 
-        binding.reset.setOnClickListener {
-            resetTimer()
-        }
+//        binding.reset.setOnClickListener {
+//            resetTimer()
+//        }
         binding.floatingActionButton.setOnClickListener {
+            alertDialog.show()
+        }
+        findViewById<Button>(R.id.start_bt).setOnClickListener {
             if (isRunning) {
-                pauseTimer()
+                countdown_timer.cancel()
+                isRunning = false
             } else {
                 val time  = findViewById<TextView>(R.id.time_edit_text).text.toString()
                 time_in_milli_seconds = time.toLong() *60000L
                 startTimer(time_in_milli_seconds)
             }
+            alertDialog.dismiss()
         }
-
-
     }
-
-    private fun pauseTimer() {
-
-        binding.button.text = "Start"
-        countdown_timer.cancel()
-        isRunning = false
-        binding.reset.visibility = VISIBLE
-    }
+//    private fun pauseTimer() {
+//
+//        countdown_timer.cancel()
+//        isRunning = false
+//    }
 
     private fun startTimer(time_in_seconds: Long) {
         countdown_timer = object : CountDownTimer(time_in_seconds, 1000) {
@@ -68,15 +69,15 @@ class MainActivity : AppCompatActivity() {
         countdown_timer.start()
 
         isRunning = true
-        binding.button.text = "Pause"
-        binding.reset.visibility = INVISIBLE
+//        binding.button.text = "Pause"
+//        binding.reset.visibility = INVISIBLE
 
     }
 
     private fun resetTimer() {
         time_in_milli_seconds = START_MILLI_SECONDS
         updateTextUI()
-        binding.reset.visibility = INVISIBLE
+//        binding.reset.visibility = INVISIBLE
     }
 
     private fun updateTextUI() {
@@ -84,8 +85,5 @@ class MainActivity : AppCompatActivity() {
         val seconds = (time_in_milli_seconds / 1000) % 60
 
         binding.timer.text = "$minute:$seconds"
-    }
-    private fun reset(){
-
     }
 }
