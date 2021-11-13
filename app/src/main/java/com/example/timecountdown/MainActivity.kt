@@ -12,6 +12,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.example.timecountdown.databinding.ActivityMainBinding
+import androidx.core.content.ContextCompat
+import java.security.AccessController.getContext
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,20 +44,44 @@ class MainActivity : AppCompatActivity() {
         binding.floatingActionButton.setOnClickListener {
             alertDialog.show()
         }
+        //initialize set time textView
+        val setTime = fabView.findViewById<TextView>(R.id.time_edit_text)
+
+        //set start button on click listener
         fabView.findViewById<Button>(R.id.start_bt).setOnClickListener {
             if (isRunning) {
                 countdown_timer.cancel()
                 isRunning = false
             } else {
-                val time = fabView.findViewById<TextView>(R.id.time_edit_text).text.toString()
-                time_in_milli_seconds = time.toLong() * 60000L
+                time_in_milli_seconds = setTime.text.toString().toLong() * 60000L
                 startTimer(time_in_milli_seconds)
             }
+            //set color to white
+            val color = ContextCompat.getColor(applicationContext, R.color.white)
+            binding.timer.setTextColor(color)
+            //dismiss dialog
             alertDialog.dismiss()
         }
+
+        //initialize cancel button
         val cancel = fabView.findViewById<ImageView>(R.id.cancel)
+        //set cancel button on click listener
         cancel.setOnClickListener {
+            //dismiss dialog
             alertDialog.dismiss()
+        }
+        //increase value when clicked
+        var value = 0
+        fabView.findViewById<ImageView>(R.id.increment).setOnClickListener {
+            value +=1
+            setTime.text = value.toString()
+        }
+        //decrease value when clicked
+        fabView.findViewById<ImageView>(R.id.decrement).setOnClickListener {
+            if (value > 0 ){
+                value -=1
+                setTime.text = value.toString()
+            }
         }
     }
 //    private fun pauseTimer() {
@@ -66,6 +93,9 @@ class MainActivity : AppCompatActivity() {
     private fun startTimer(time_in_seconds: Long) {
         countdown_timer = object : CountDownTimer(time_in_seconds, 1000) {
             override fun onFinish() {
+                binding.timer.text = "TIME'S UP"
+                val color = ContextCompat.getColor(applicationContext, R.color.red)
+                binding.timer.setTextColor(color)
             }
 
             override fun onTick(p0: Long) {
@@ -92,5 +122,9 @@ class MainActivity : AppCompatActivity() {
         val seconds = (time_in_milli_seconds / 1000) % 60
 
         binding.timer.text = "$minute:$seconds"
+        if(seconds < 30){
+            val color = ContextCompat.getColor(applicationContext, R.color.red)
+            binding.timer.setTextColor(color)
+        }
     }
 }

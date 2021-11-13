@@ -40,6 +40,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="16dp" />
     <ImageButton
+        android:id="@+id/increment"
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:layout_constraintStart_toEndOf="@id/time_edit_text"
@@ -47,6 +48,7 @@
         app:layout_constraintBottom_toBottomOf="@id/time_edit_text"
         android:background="@drawable/ic_baseline_arrow_right_24"/>
     <ImageButton
+        android:id="@+id/decrement"
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:layout_constraintEnd_toStartOf="@id/time_edit_text"
