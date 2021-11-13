@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import com.example.timecountdown.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -22,18 +24,24 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        binding.button.setOnClickListener {
-            if (isRunning) {
-                pauseTimer()
-            } else {
-                val time  = binding.timeEditText.text.toString()
-                time_in_milli_seconds = time.toLong() *60000L
-                startTimer(time_in_milli_seconds)
-            }
-        }
+        val builder = AlertDialog.Builder(this)
+        val fabView = layoutInflater.inflate(R.layout.set_timmer, null)
+        builder.setView(fabView)
+
+        val alertDialog = builder.create()
+
 
         binding.reset.setOnClickListener {
             resetTimer()
+        }
+        binding.floatingActionButton.setOnClickListener {
+            if (isRunning) {
+                pauseTimer()
+            } else {
+                val time  = findViewById<TextView>(R.id.time_edit_text).text.toString()
+                time_in_milli_seconds = time.toLong() *60000L
+                startTimer(time_in_milli_seconds)
+            }
         }
 
 
