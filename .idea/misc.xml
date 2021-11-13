@@ -4,7 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../Android/Sdk/platforms/android-31/data/res/drawable/ic_lock_power_off.xml" value="0.209375" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/set_timmer.xml" value="0.18297101449275363" />
       </map>
     </option>
   </component>

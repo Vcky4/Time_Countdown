@@ -77,4 +77,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.timer.text = "$minute:$seconds"
     }
+    private fun reset(){
+
+    }
 }
