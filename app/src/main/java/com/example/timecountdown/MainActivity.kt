@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
         val minute = (time_in_milli_seconds / 1000) / 60
         val seconds = (time_in_milli_seconds / 1000) % 60
 
-        binding.timer.text = "$minute:$seconds"
+        binding.timer.text = "$minute : $seconds"
         if(seconds < 30){
             val color = ContextCompat.getColor(applicationContext, R.color.red)
             binding.timer.setTextColor(color)
