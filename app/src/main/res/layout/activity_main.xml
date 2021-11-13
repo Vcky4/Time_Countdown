@@ -14,7 +14,7 @@
         android:text="0"
         android:textColor="@color/white"
         android:textStyle="bold"
-        android:textSize="100sp"
+        android:textSize="150sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +25,7 @@
 
 
     <DigitalClock
-        android:textSize="40sp"
+        android:textSize="70sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:ignore="HardcodedText">
 
-    <com.google.android.material.textfield.TextInputEditText
+    <EditText
         android:id="@+id/time_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:textSize="30sp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintBottom_toBottomOf="parent" />
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/start_bt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,18 +30,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/time_edit_text"
         android:text="Start"/>
-    <View
+    <ImageButton
         android:id="@+id/cancel"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="@drawable/ic_outline_cancel_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="16dp"
-        android:clickable="true"
-        android:focusable="true"/>
-
-
+        android:layout_margin="16dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

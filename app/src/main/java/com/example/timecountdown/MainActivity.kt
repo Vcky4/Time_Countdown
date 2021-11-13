@@ -7,15 +7,17 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.example.timecountdown.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    var START_MILLI_SECONDS = 60000L
+    private var START_MILLI_SECONDS = 60000L
 
-    lateinit var countdown_timer: CountDownTimer
+    private lateinit var countdown_timer: CountDownTimer
     var isRunning: Boolean = false;
     var time_in_milli_seconds = 0L
     private lateinit var binding: ActivityMainBinding
@@ -35,22 +37,23 @@ class MainActivity : AppCompatActivity() {
 
 //        binding.reset.setOnClickListener {
 //            resetTimer()
-//        }
+////        }
         binding.floatingActionButton.setOnClickListener {
             alertDialog.show()
         }
-        findViewById<Button>(R.id.start_bt).setOnClickListener {
+        fabView.findViewById<Button>(R.id.start_bt).setOnClickListener {
             if (isRunning) {
                 countdown_timer.cancel()
                 isRunning = false
             } else {
-                val time  = findViewById<TextView>(R.id.time_edit_text).text.toString()
-                time_in_milli_seconds = time.toLong() *60000L
+                val time = findViewById<TextView>(R.id.time_edit_text).text.toString()
+                time_in_milli_seconds = time.toLong() * 60000L
                 startTimer(time_in_milli_seconds)
             }
             alertDialog.dismiss()
         }
-        findViewById<View>(R.id.cancel).setOnClickListener {
+        val cancel = fabView.findViewById<ImageView>(R.id.cancel)
+        cancel.setOnClickListener {
             alertDialog.dismiss()
         }
     }
