@@ -3,6 +3,7 @@ package com.example.timecountdown
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Button
@@ -47,6 +48,9 @@ class MainActivity : AppCompatActivity() {
                 time_in_milli_seconds = time.toLong() *60000L
                 startTimer(time_in_milli_seconds)
             }
+            alertDialog.dismiss()
+        }
+        findViewById<View>(R.id.cancel).setOnClickListener {
             alertDialog.dismiss()
         }
     }
