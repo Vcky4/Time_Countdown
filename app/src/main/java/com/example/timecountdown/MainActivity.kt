@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     private var START_MILLI_SECONDS = 60000L
 
     private lateinit var countdown_timer: CountDownTimer
-    var isRunning: Boolean = false;
+    private var isRunning: Boolean = false
     var time_in_milli_seconds = 0L
     private lateinit var binding: ActivityMainBinding
 
@@ -45,12 +45,17 @@ class MainActivity : AppCompatActivity() {
 
         //set start button on click listener
         fabView.findViewById<Button>(R.id.start_bt).setOnClickListener {
-
+            if (isRunning) {
                 countdown_timer.cancel()
+                isRunning = false
 
                 time_in_milli_seconds = setTime.text.toString().toLong() * 60000L
                 startTimer(time_in_milli_seconds)
-
+            } else {
+                resetTimer()
+                time_in_milli_seconds = setTime.text.toString().toLong() * 60000L
+                startTimer(time_in_milli_seconds)
+            }
             //set color to white
             val color = ContextCompat.getColor(applicationContext, R.color.white)
             binding.timer.setTextColor(color)
@@ -101,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         }
         countdown_timer.start()
 
-//        isRunning = true
+        isRunning = true
 //        binding.button.text = "Pause"
 //        binding.reset.visibility = INVISIBLE
 
