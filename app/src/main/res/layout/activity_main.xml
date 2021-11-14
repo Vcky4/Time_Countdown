@@ -16,7 +16,7 @@
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         android:textColor="@color/white"
-        android:textSize="200sp"
+        android:textSize="220sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/digitalClock"
         app:layout_constraintEnd_toEndOf="parent"
