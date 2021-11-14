@@ -1,19 +1,15 @@
 package com.example.timecountdown
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.view.View
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.example.timecountdown.databinding.ActivityMainBinding
 import androidx.core.content.ContextCompat
-import java.security.AccessController.getContext
 
 
 class MainActivity : AppCompatActivity() {
@@ -49,13 +45,12 @@ class MainActivity : AppCompatActivity() {
 
         //set start button on click listener
         fabView.findViewById<Button>(R.id.start_bt).setOnClickListener {
-            if (isRunning) {
+
                 countdown_timer.cancel()
-                isRunning = false
-            } else {
+
                 time_in_milli_seconds = setTime.text.toString().toLong() * 60000L
                 startTimer(time_in_milli_seconds)
-            }
+
             //set color to white
             val color = ContextCompat.getColor(applicationContext, R.color.white)
             binding.timer.setTextColor(color)
@@ -92,6 +87,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startTimer(time_in_seconds: Long) {
         countdown_timer = object : CountDownTimer(time_in_seconds, 1000) {
+            @SuppressLint("SetTextI18n")
             override fun onFinish() {
                 binding.timer.text = "TIME'S UP"
                 val color = ContextCompat.getColor(applicationContext, R.color.red)
@@ -105,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         }
         countdown_timer.start()
 
-        isRunning = true
+//        isRunning = true
 //        binding.button.text = "Pause"
 //        binding.reset.visibility = INVISIBLE
 
@@ -117,6 +113,7 @@ class MainActivity : AppCompatActivity() {
 //        binding.reset.visibility = INVISIBLE
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateTextUI() {
         val minute = (time_in_milli_seconds / 1000) / 60
         val seconds = (time_in_milli_seconds / 1000) % 60

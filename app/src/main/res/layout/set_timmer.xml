@@ -17,7 +17,7 @@
         android:textColorHint="@color/white"
         android:padding="10dp"
         android:textColor="@color/white"
-        android:textSize="50sp"
+        android:textSize="100sp"
         android:text="0"
         app:layout_constraintBottom_toBottomOf="parent" />
     <Button
@@ -28,6 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@color/black"
         android:textColor="@color/white"
+        android:textSize="50sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/time_edit_text"
         android:text="Start"/>
@@ -41,16 +42,16 @@
         android:layout_margin="16dp" />
     <ImageButton
         android:id="@+id/increment"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         app:layout_constraintStart_toEndOf="@id/time_edit_text"
         app:layout_constraintTop_toTopOf="@id/time_edit_text"
         app:layout_constraintBottom_toBottomOf="@id/time_edit_text"
         android:background="@drawable/ic_baseline_arrow_right_24"/>
     <ImageButton
         android:id="@+id/decrement"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         app:layout_constraintEnd_toStartOf="@id/time_edit_text"
         app:layout_constraintTop_toTopOf="@id/time_edit_text"
         app:layout_constraintBottom_toBottomOf="@id/time_edit_text"
