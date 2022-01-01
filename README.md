@@ -20,3 +20,7 @@ Time countdown is an android mobile applications that can be used to set a count
 
 * when time elapse a "Time's up" is displayed on the screen 👇
 ![Screenshot_20220101-122113~2](https://user-images.githubusercontent.com/69816875/147852896-0546ee25-324a-4ab5-b076-cb600ae5c6c8.png)
+
+## Contribution
+Feel free to folk repo and send a pull request if you have any suggestions or contribution.
+Also so you can reach out if you need to understand anything 😊
