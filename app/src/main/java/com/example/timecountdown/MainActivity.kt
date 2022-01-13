@@ -1,15 +1,22 @@
 package com.example.timecountdown
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.example.timecountdown.databinding.ActivityMainBinding
 import androidx.core.content.ContextCompat
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,12 +28,41 @@ class MainActivity : AppCompatActivity() {
     var time_in_milli_seconds = 0L
     private lateinit var binding: ActivityMainBinding
 
+
+    private var mInterstitialAd: InterstitialAd? = null
+    private final var TAG = "MainActivity"
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
+        //initiate admob
+        MobileAds.initialize(this) {}
+        //set ads view
+        val mAdView = binding.adView
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
+
+
+        //set fullscreen callback
+        InterstitialAd.load(this,"ca-app-pub-2805616918393635/4878840900",
+            adRequest, object : InterstitialAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.d(TAG, adError.message)
+                mInterstitialAd = null
+            }
+
+            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                Log.d(TAG, "Ad was loaded.")
+                mInterstitialAd = interstitialAd
+            }
+        })
+
+
+        //alert builder
         val builder = AlertDialog.Builder(this)
         val fabView = layoutInflater.inflate(R.layout.set_timmer, null)
         builder.setView(fabView)
@@ -50,11 +86,11 @@ class MainActivity : AppCompatActivity() {
                 isRunning = false
 
                 time_in_milli_seconds = setTime.text.toString().toLong() * 60000L
-                startTimer(time_in_milli_seconds)
+                startTimer(time_in_milli_seconds, this)
             } else {
                 resetTimer()
                 time_in_milli_seconds = setTime.text.toString().toLong() * 60000L
-                startTimer(time_in_milli_seconds)
+                startTimer(time_in_milli_seconds, this)
             }
             //set color to white
             val color = ContextCompat.getColor(applicationContext, R.color.white)
@@ -90,13 +126,20 @@ class MainActivity : AppCompatActivity() {
 //        isRunning = false
 //    }
 
-    private fun startTimer(time_in_seconds: Long) {
+    private fun startTimer(time_in_seconds: Long, activity: Activity) {
         countdown_timer = object : CountDownTimer(time_in_seconds, 1000) {
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
                 binding.timer.text = "TIME'S UP"
                 val color = ContextCompat.getColor(applicationContext, R.color.red)
                 binding.timer.setTextColor(color)
+
+                //show ads
+                if (mInterstitialAd != null) {
+                    mInterstitialAd?.show(activity)
+                } else {
+                    Log.d("TAG", "The interstitial ad wasn't ready yet.")
+                }
             }
 
             override fun onTick(p0: Long) {
