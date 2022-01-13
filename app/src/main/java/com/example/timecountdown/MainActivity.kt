@@ -21,16 +21,16 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
 class MainActivity : AppCompatActivity() {
 
-    private var START_MILLI_SECONDS = 60000L
+    private var startMilliSeconds = 60000L
 
-    private lateinit var countdown_timer: CountDownTimer
+    private lateinit var countdownTimer: CountDownTimer
     private var isRunning: Boolean = false
-    var time_in_milli_seconds = 0L
+    var timeInMilliSeconds = 0L
     private lateinit var binding: ActivityMainBinding
 
 
     private var mInterstitialAd: InterstitialAd? = null
-    private final var TAG = "MainActivity"
+    private  var tag = "MainActivity"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,12 +51,12 @@ class MainActivity : AppCompatActivity() {
         InterstitialAd.load(this,"ca-app-pub-2805616918393635/4878840900",
             adRequest, object : InterstitialAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.d(TAG, adError.message)
+                Log.d(tag, adError.message)
                 mInterstitialAd = null
             }
 
             override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                Log.d(TAG, "Ad was loaded.")
+                Log.d(tag, "Ad was loaded.")
                 mInterstitialAd = interstitialAd
             }
         })
@@ -82,15 +82,15 @@ class MainActivity : AppCompatActivity() {
         //set start button on click listener
         fabView.findViewById<Button>(R.id.start_bt).setOnClickListener {
             if (isRunning) {
-                countdown_timer.cancel()
+                countdownTimer.cancel()
                 isRunning = false
 
-                time_in_milli_seconds = setTime.text.toString().toLong() * 60000L
-                startTimer(time_in_milli_seconds, this)
+                timeInMilliSeconds = setTime.text.toString().toLong() * 60000L
+                startTimer(timeInMilliSeconds, this)
             } else {
                 resetTimer()
-                time_in_milli_seconds = setTime.text.toString().toLong() * 60000L
-                startTimer(time_in_milli_seconds, this)
+                timeInMilliSeconds = setTime.text.toString().toLong() * 60000L
+                startTimer(timeInMilliSeconds, this)
             }
             //set color to white
             val color = ContextCompat.getColor(applicationContext, R.color.white)
@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity() {
 //    }
 
     private fun startTimer(time_in_seconds: Long, activity: Activity) {
-        countdown_timer = object : CountDownTimer(time_in_seconds, 1000) {
+        countdownTimer = object : CountDownTimer(time_in_seconds, 1000) {
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
                 binding.timer.text = "TIME'S UP"
@@ -143,11 +143,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTick(p0: Long) {
-                time_in_milli_seconds = p0
+                timeInMilliSeconds = p0
                 updateTextUI()
             }
         }
-        countdown_timer.start()
+        countdownTimer.start()
 
         isRunning = true
 //        binding.button.text = "Pause"
@@ -156,15 +156,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun resetTimer() {
-        time_in_milli_seconds = START_MILLI_SECONDS
+        timeInMilliSeconds = startMilliSeconds
         updateTextUI()
 //        binding.reset.visibility = INVISIBLE
     }
 
     @SuppressLint("SetTextI18n")
     private fun updateTextUI() {
-        val minute = (time_in_milli_seconds / 1000) / 60
-        val seconds = (time_in_milli_seconds / 1000) % 60
+        val minute = (timeInMilliSeconds / 1000) / 60
+        val seconds = (timeInMilliSeconds / 1000) % 60
 
         binding.timer.text = "$minute : $seconds"
         if(seconds < 30){
