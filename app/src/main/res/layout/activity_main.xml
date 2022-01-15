@@ -66,5 +66,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_baseline_restore_24"
         tools:ignore="HardcodedText" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/alamFloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTintMode="multiply"
+        android:clickable="true"
+        android:contentDescription="set time button"
+        android:focusable="true"
+        android:tint="@color/white"
+        android:tintMode="src_in"
+        app:backgroundTint="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_baseline_notifications_24"
+        tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,10 @@ package com.example.timecountdown
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
+import android.media.MediaPlayer
+import android.media.Ringtone
+import android.media.RingtoneManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -27,10 +31,11 @@ class MainActivity : AppCompatActivity() {
     private var isRunning: Boolean = false
     var timeInMilliSeconds = 0L
     private lateinit var binding: ActivityMainBinding
+    private var isEnabled: Boolean = true
 
 
     private var mInterstitialAd: InterstitialAd? = null
-    private  var tag = "MainActivity"
+    private var tag = "MainActivity"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,18 +53,18 @@ class MainActivity : AppCompatActivity() {
 
 
         //set fullscreen callback
-        InterstitialAd.load(this,"ca-app-pub-2805616918393635/4878840900",
+        InterstitialAd.load(this, "ca-app-pub-2805616918393635/4878840900",
             adRequest, object : InterstitialAdLoadCallback() {
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.d(tag, adError.message)
-                mInterstitialAd = null
-            }
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.d(tag, adError.message)
+                    mInterstitialAd = null
+                }
 
-            override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                Log.d(tag, "Ad was loaded.")
-                mInterstitialAd = interstitialAd
-            }
-        })
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    Log.d(tag, "Ad was loaded.")
+                    mInterstitialAd = interstitialAd
+                }
+            })
 
 
         //alert builder
@@ -75,6 +80,22 @@ class MainActivity : AppCompatActivity() {
 ////        }
         binding.floatingActionButton.setOnClickListener {
             alertDialog.show()
+
+            // Stop playing sound
+//            if (sound.isPlaying) {
+//                sound.stop()
+//            }
+        }
+
+        // enable and disable sound
+        binding.alamFloatingActionButton.setOnClickListener {
+            if (isEnabled){
+                binding.alamFloatingActionButton.setImageResource(R.drawable.ic_baseline_notifications_off_24)
+                isEnabled = false
+            }else{
+                binding.alamFloatingActionButton.setImageResource(R.drawable.ic_baseline_notifications_24)
+                isEnabled = true
+            }
         }
         //initialize set time textView
         val setTime = fabView.findViewById<TextView>(R.id.time_edit_text)
@@ -109,16 +130,18 @@ class MainActivity : AppCompatActivity() {
         //increase value when clicked
         var value = 0
         fabView.findViewById<ImageView>(R.id.increment).setOnClickListener {
-            value +=1
+            value += 1
             setTime.text = value.toString()
         }
         //decrease value when clicked
         fabView.findViewById<ImageView>(R.id.decrement).setOnClickListener {
-            if (value > 0 ){
-                value -=1
+            if (value > 0) {
+                value -= 1
                 setTime.text = value.toString()
             }
         }
+
+
     }
 //    private fun pauseTimer() {
 //
@@ -126,6 +149,8 @@ class MainActivity : AppCompatActivity() {
 //        isRunning = false
 //    }
 
+    // Get the device default ringtone
+//    private val sound = MediaPlayer.create(this, R.raw.ding_sound )
     private fun startTimer(time_in_seconds: Long, activity: Activity) {
         countdownTimer = object : CountDownTimer(time_in_seconds, 1000) {
             @SuppressLint("SetTextI18n")
@@ -133,6 +158,18 @@ class MainActivity : AppCompatActivity() {
                 binding.timer.text = "TIME'S UP"
                 val color = ContextCompat.getColor(applicationContext, R.color.red)
                 binding.timer.setTextColor(color)
+
+                // Play the default ringtone
+//                if (!sound.isPlaying) {
+//                    sound.start()
+//                }
+                val sound = MediaPlayer.create(applicationContext, R.raw.ding_sound)
+                if(isEnabled){
+                    sound.start()
+                }else{
+                    sound.stop()
+                }
+
 
                 //show ads
                 if (mInterstitialAd != null) {
@@ -145,6 +182,8 @@ class MainActivity : AppCompatActivity() {
             override fun onTick(p0: Long) {
                 timeInMilliSeconds = p0
                 updateTextUI()
+
+
             }
         }
         countdownTimer.start()
@@ -166,10 +205,21 @@ class MainActivity : AppCompatActivity() {
         val minute = (timeInMilliSeconds / 1000) / 60
         val seconds = (timeInMilliSeconds / 1000) % 60
 
+
+
         binding.timer.text = "$minute : $seconds"
-        if(seconds < 30){
+        if (seconds < 30) {
             val color = ContextCompat.getColor(applicationContext, R.color.red)
+//            val warning = MediaPlayer.create(this, R.raw.alarm_clock_beep)
             binding.timer.setTextColor(color)
+//            if(seconds > 0){
+//                warning.start()
+//            }
+//            if(seconds < 1){
+//                warning.stop()
+//            }
         }
+
+
     }
 }
