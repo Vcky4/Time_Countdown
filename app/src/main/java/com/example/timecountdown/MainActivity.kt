@@ -208,7 +208,7 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.timer.text = "$minute : $seconds"
-        if (seconds < 30) {
+        if (seconds < 30 && minute < 1) {
             val color = ContextCompat.getColor(applicationContext, R.color.red)
 //            val warning = MediaPlayer.create(this, R.raw.alarm_clock_beep)
             binding.timer.setTextColor(color)
