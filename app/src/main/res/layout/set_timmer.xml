@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/black"
+    android:layout_height="match_parent"
+    tools:ignore="HardcodedText">
+
+    <TextView
+        android:id="@+id/time_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColorHint="@color/white"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textSize="100sp"
+        android:text="0"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <Button
+        android:id="@+id/start_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/black"
+        android:textColor="@color/white"
+        android:textSize="50sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/time_edit_text"
+        android:text="Start"/>
+    <ImageButton
+        android:id="@+id/cancel"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/ic_outline_cancel_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="16dp" />
+    <ImageButton
+        android:id="@+id/increment"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintStart_toEndOf="@id/time_edit_text"
+        app:layout_constraintTop_toTopOf="@id/time_edit_text"
+        app:layout_constraintBottom_toBottomOf="@id/time_edit_text"
+        android:background="@drawable/ic_baseline_arrow_right_24"/>
+    <ImageButton
+        android:id="@+id/decrement"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintEnd_toStartOf="@id/time_edit_text"
+        app:layout_constraintTop_toTopOf="@id/time_edit_text"
+        app:layout_constraintBottom_toBottomOf="@id/time_edit_text"
+        android:background="@drawable/ic_baseline_arrow_left_24"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
