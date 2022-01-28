@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/black"
     android:keepScreenOn="true"
+    tools:ignore="HardcodedText"
     tools:context="com.vicksoson.timecountdown.MainActivity">
 
     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -32,7 +33,7 @@
         android:textColor="@color/white"
         android:textSize="120sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/digitalClock"
+        app:layout_constraintBottom_toTopOf="@+id/quick_countdown"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -48,6 +49,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/quick_countdown"
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -62,10 +64,12 @@
         android:tint="@color/white"
         android:tintMode="src_in"
         app:backgroundTint="@color/black"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_baseline_restore_24"
         tools:ignore="HardcodedText" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/alamFloatingActionButton"
         android:layout_width="wrap_content"
@@ -78,9 +82,31 @@
         android:tint="@color/white"
         android:tintMode="src_in"
         app:backgroundTint="@color/black"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_notifications_24"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText,RedundantDescriptionCheck" />
+
+    <Button
+        android:id="@+id/quick_countdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="quick countdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timer"
+        app:layout_constraintBottom_toTopOf="@id/digitalClock"
+         />
+
+    <ImageButton
+        android:id="@+id/time_control"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_pause_24"
+        app:layout_constraintTop_toBottomOf="@id/timer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/black"
+        android:contentDescription="time control" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

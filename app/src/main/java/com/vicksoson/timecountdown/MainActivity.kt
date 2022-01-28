@@ -75,8 +75,13 @@ class MainActivity : AppCompatActivity() {
 //        binding.reset.setOnClickListener {
 //            resetTimer()
 ////        }
-        binding.floatingActionButton.setOnClickListener {
-            alertDialog.show()
+        binding.quickCountdown.setOnClickListener {
+            if(isRunning){
+                pauseTimer()
+            }else{
+                alertDialog.show()
+            }
+
 
             // Stop playing sound
 //            if (sound.isPlaying) {
@@ -86,12 +91,12 @@ class MainActivity : AppCompatActivity() {
 
         // enable and disable sound
         binding.alamFloatingActionButton.setOnClickListener {
-            if (isEnabled){
+            isEnabled = if (isEnabled){
                 binding.alamFloatingActionButton.setImageResource(R.drawable.ic_baseline_notifications_off_24)
-                isEnabled = false
+                false
             }else{
                 binding.alamFloatingActionButton.setImageResource(R.drawable.ic_baseline_notifications_24)
-                isEnabled = true
+                true
             }
         }
         //initialize set time textView
@@ -140,11 +145,17 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-//    private fun pauseTimer() {
-//
-//        countdown_timer.cancel()
-//        isRunning = false
-//    }
+    private fun pauseTimer() {
+
+        countdownTimer.cancel()
+        isRunning = false
+
+        binding.quickCountdown.text = "quick Countdown"
+    }
+
+    private fun resumeTimer(){
+
+    }
 
     // Get the device default ringtone
 //    private val sound = MediaPlayer.create(this, R.raw.ding_sound )
@@ -152,6 +163,7 @@ class MainActivity : AppCompatActivity() {
         countdownTimer = object : CountDownTimer(time_in_seconds, 1000) {
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
+                binding.timer.textSize = 100F
                 binding.timer.text = "TIME'S UP"
                 val color = ContextCompat.getColor(applicationContext, R.color.red)
                 binding.timer.setTextColor(color)
@@ -183,11 +195,13 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
-        countdownTimer.start()
+        binding.timer.textSize = 120F
 
+        countdownTimer.start()
         isRunning = true
 //        binding.button.text = "Pause"
 //        binding.reset.visibility = INVISIBLE
+        binding.quickCountdown.text = "pause"
 
     }
 
