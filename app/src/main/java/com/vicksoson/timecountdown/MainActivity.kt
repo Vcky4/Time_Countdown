@@ -6,6 +6,8 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -75,12 +77,19 @@ class MainActivity : AppCompatActivity() {
 //        binding.reset.setOnClickListener {
 //            resetTimer()
 ////        }
-        binding.quickCountdown.setOnClickListener {
+        binding.timeControl.setOnClickListener{
             if(isRunning){
                 pauseTimer()
+                binding.timeControl.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                binding.quickCountdown.visibility = VISIBLE
             }else{
-                alertDialog.show()
+                countdownTimer.start()
+                binding.timeControl.setImageResource(R.drawable.ic_baseline_pause_24)
+                binding.quickCountdown.visibility = INVISIBLE
             }
+        }
+        binding.quickCountdown.setOnClickListener {
+            alertDialog.show()
 
 
             // Stop playing sound
