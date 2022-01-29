@@ -6,8 +6,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -28,7 +27,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var countdownTimer: CountDownTimer
     private var isRunning: Boolean = false
-    var timeInMilliSeconds = 0L
+    private var timeInMilliSeconds = 0L
+    private var currentTime = 0L
     private lateinit var binding: ActivityMainBinding
     private var isEnabled: Boolean = true
 
@@ -76,14 +76,16 @@ class MainActivity : AppCompatActivity() {
 
 //        binding.reset.setOnClickListener {
 //            resetTimer()
-////        }
+////        }0L
+
+        //Timer controls
         binding.timeControl.setOnClickListener{
             if(isRunning){
                 pauseTimer()
                 binding.timeControl.setImageResource(R.drawable.ic_baseline_play_arrow_24)
                 binding.quickCountdown.visibility = VISIBLE
             }else{
-                countdownTimer.start()
+                resumeTimer()
                 binding.timeControl.setImageResource(R.drawable.ic_baseline_pause_24)
                 binding.quickCountdown.visibility = INVISIBLE
             }
@@ -156,14 +158,14 @@ class MainActivity : AppCompatActivity() {
     }
     private fun pauseTimer() {
 
+        currentTime = timeInMilliSeconds
         countdownTimer.cancel()
         isRunning = false
 
-        binding.quickCountdown.text = "quick Countdown"
     }
 
     private fun resumeTimer(){
-
+        startTimer(currentTime, this)
     }
 
     // Get the device default ringtone
@@ -174,6 +176,7 @@ class MainActivity : AppCompatActivity() {
             override fun onFinish() {
                 binding.timer.textSize = 100F
                 binding.timer.text = "TIME'S UP"
+                binding.timeControl.visibility = GONE
                 val color = ContextCompat.getColor(applicationContext, R.color.red)
                 binding.timer.setTextColor(color)
 
@@ -210,7 +213,7 @@ class MainActivity : AppCompatActivity() {
         isRunning = true
 //        binding.button.text = "Pause"
 //        binding.reset.visibility = INVISIBLE
-        binding.quickCountdown.text = "pause"
+        binding.timeControl.visibility = VISIBLE
 
     }
 
