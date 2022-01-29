@@ -13,12 +13,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.vicksoson.timecountdown.databinding.ActivityMainBinding
+import com.vicksoson.timecountdown.viewmodel.MainViewModel
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,12 +29,9 @@ class MainActivity : AppCompatActivity() {
     private var startMilliSeconds = 60000L
 
     private lateinit var countdownTimer: CountDownTimer
-    private var isRunning: Boolean = false
-    private var timeInMilliSeconds = 0L
-    private var currentTime = 0L
-    private lateinit var binding: ActivityMainBinding
-    private var isEnabled: Boolean = true
 
+    private var timeInMilliSeconds = 0L
+    private lateinit var binding: ActivityMainBinding
 
     private var mInterstitialAd: InterstitialAd? = null
     private var tag = "MainActivity"
@@ -42,6 +42,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        val mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         //initiate admob
         MobileAds.initialize(this) {}
@@ -84,19 +86,35 @@ class MainActivity : AppCompatActivity() {
         val setMinutes = setTimeView.findViewById<TextView>(R.id.minute_text)
 
         //Timer controls
-        binding.timeControl.setOnClickListener{
-            if(isRunning){
-                pauseTimer()
-                binding.timeControl.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-                binding.quickCountdown.visibility = VISIBLE
-            }else{
-                resumeTimer()
-                binding.timeControl.setImageResource(R.drawable.ic_baseline_pause_24)
-                binding.quickCountdown.visibility = INVISIBLE
-            }
+        binding.timeControl.setOnClickListener {
+            mainViewModel.isRunning.observe(this,{ isRunning ->
+                if (isRunning) {
+//                pauseTimer()
+                    //set current
+                    mainViewModel.time.observe(this,{
+                        mainViewModel.setCurrentTime(it)
+                    })
+                    //pause time
+                    countdownTimer.cancel()
+                    mainViewModel.resetValues()
+                    mainViewModel.setRunning(false)
+
+                    binding.timeControl.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                    binding.quickCountdown.visibility = VISIBLE
+                } else {
+//                resumeTimer()
+                    //resume timer
+                    mainViewModel.currentTime.observe(this,{
+                        startTimer(it,this, mainViewModel, this)
+                    })
+                    binding.timeControl.setImageResource(R.drawable.ic_baseline_pause_24)
+                    binding.quickCountdown.visibility = INVISIBLE
+                }
+            })
+
         }
         binding.quickCountdown.setOnClickListener {
-            setSeconds.text = "0"
+            mainViewModel.resetValues()
             alertDialog.show()
 
 
@@ -107,30 +125,40 @@ class MainActivity : AppCompatActivity() {
         }
 
         // enable and disable sound
-        binding.alamFloatingActionButton.setOnClickListener {
-            isEnabled = if (isEnabled){
+        mainViewModel.isEnabled.observe(this,{ state ->
+             binding.alamFloatingActionButton.setOnClickListener {
+            if (state) {
                 binding.alamFloatingActionButton.setImageResource(R.drawable.ic_baseline_notifications_off_24)
-                false
-            }else{
+                mainViewModel.setEnable(false)
+            } else {
                 binding.alamFloatingActionButton.setImageResource(R.drawable.ic_baseline_notifications_24)
-                true
+                mainViewModel.setEnable(true)
             }
         }
+        })
+
 
 
         //set start button on click listener
         setTimeView.findViewById<Button>(R.id.start_bt).setOnClickListener {
-            if (isRunning) {
-                countdownTimer.cancel()
-                isRunning = false
+            mainViewModel.isRunning.observe(this,{
+                if (it) {
+                    countdownTimer.cancel()
+                    mainViewModel.setRunning(false)
+                    mainViewModel.updateTime()
+                    mainViewModel.time.observe(this, { time ->
+                        startTimer(time, this, mainViewModel, this)
+                    })
+                } else {
+                    mainViewModel.updateTime()
+                    resetTimer()
+                    mainViewModel.time.observe(this, { time ->
+                        startTimer(time, this, mainViewModel, this)
+                    })
 
-                timeInMilliSeconds = setMinutes.text.toString().toLong().times(3600000L).toLong().plus(setSeconds.text.toString().toLong() * 60000L)
-                startTimer(timeInMilliSeconds, this)
-            } else {
-                resetTimer()
-                timeInMilliSeconds = setMinutes.text.toString().toLong().times(3600000L).toLong().plus(setSeconds.text.toString().toLong() * 60000L)
-                startTimer(timeInMilliSeconds, this)
-            }
+                }
+            })
+
             //set color to white
             val color = ContextCompat.getColor(applicationContext, R.color.white)
             binding.timer.setTextColor(color)
@@ -148,59 +176,60 @@ class MainActivity : AppCompatActivity() {
             //dismiss dialog
             alertDialog.dismiss()
         }
-        //increase seconds when clicked
-        var seconds = 0
         //increase seconds on click
         setTimeView.findViewById<ImageView>(R.id.s_increment).setOnClickListener {
-            if (seconds < 61){
-                seconds += 1
-                setSeconds.text = seconds.toString()
-            }
+            mainViewModel.sIncrement()
+            mainViewModel.seconds.observe(this, {
+                setSeconds.text = it.toString()
+            })
 
         }
         //decrease seconds when clicked
         setTimeView.findViewById<ImageView>(R.id.s_decrement).setOnClickListener {
-            if (seconds > 0) {
-                seconds -= 1
-                setSeconds.text = seconds.toString()
-            }
+            mainViewModel.sDecrement()
+            mainViewModel.seconds.observe(this, {
+                setSeconds.text = it.toString()
+            })
         }
 
-        //increase minute when clicked
-        var minutes = 0
         //increase minute on click
         setTimeView.findViewById<ImageView>(R.id.m_increment).setOnClickListener {
-            if (minutes < 61){
-                minutes += 1
-                setMinutes.text = minutes.toString()
-            }
+            mainViewModel.mIncrement()
+            mainViewModel.minutes.observe(this, {
+                setMinutes.text = it.toString()
+            })
 
         }
         //decrease minutes when clicked
         setTimeView.findViewById<ImageView>(R.id.m_decrement).setOnClickListener {
-            if (minutes > 0) {
-                minutes -= 1
-                setMinutes.text = minutes.toString()
-            }
+            mainViewModel.mDecrement()
+            mainViewModel.minutes.observe(this, {
+                setMinutes.text = it.toString()
+            })
         }
 
 
-    }
-    private fun pauseTimer() {
 
-        currentTime = timeInMilliSeconds
-        countdownTimer.cancel()
-        isRunning = false
+
+
 
     }
 
-    private fun resumeTimer(){
-        startTimer(currentTime, this)
-    }
+//    private fun pauseTimer() {
+//
+//        currentTime = timeInMilliSeconds
+//        countdownTimer.cancel()
+//        isRunning = false
+//
+//    }
+
+//    private fun resumeTimer() {
+//        startTimer(currentTime, this)
+//    }
 
     // Get the device default ringtone
 //    private val sound = MediaPlayer.create(this, R.raw.ding_sound )
-    private fun startTimer(time_in_seconds: Long, activity: Activity) {
+    private fun startTimer(time_in_seconds: Long, activity: Activity, viewModel: MainViewModel, owner: LifecycleOwner) {
         countdownTimer = object : CountDownTimer(time_in_seconds, 1000) {
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
@@ -216,11 +245,14 @@ class MainActivity : AppCompatActivity() {
 //                    sound.start()
 //                }
                 val sound = MediaPlayer.create(applicationContext, R.raw.ding_sound)
-                if(isEnabled){
-                    sound.start()
-                }else{
-                    sound.stop()
-                }
+                viewModel.isEnabled.observe(owner,{
+                    if (it) {
+                        sound.start()
+                    } else {
+                        sound.stop()
+                    }
+                })
+
 
 
                 //show ads
@@ -241,7 +273,7 @@ class MainActivity : AppCompatActivity() {
         binding.timer.textSize = 120F
 
         countdownTimer.start()
-        isRunning = true
+        viewModel.setRunning(true)
 //        binding.button.text = "Pause"
 //        binding.reset.visibility = INVISIBLE
         binding.timeControl.visibility = VISIBLE
