@@ -68,8 +68,8 @@ class MainActivity : AppCompatActivity() {
 
         //alert builder
         val builder = AlertDialog.Builder(this)
-        val fabView = layoutInflater.inflate(R.layout.set_timmer, null)
-        builder.setView(fabView)
+        val setTimeView = layoutInflater.inflate(R.layout.set_timmer, null)
+        builder.setView(setTimeView)
 
         val alertDialog = builder.create()
 
@@ -77,6 +77,10 @@ class MainActivity : AppCompatActivity() {
 //        binding.reset.setOnClickListener {
 //            resetTimer()
 ////        }0L
+
+
+        //initialize set time textView
+        val setTime = setTimeView.findViewById<TextView>(R.id.seconds_text)
 
         //Timer controls
         binding.timeControl.setOnClickListener{
@@ -91,6 +95,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.quickCountdown.setOnClickListener {
+            setTime.text = "0"
             alertDialog.show()
 
 
@@ -110,11 +115,10 @@ class MainActivity : AppCompatActivity() {
                 true
             }
         }
-        //initialize set time textView
-        val setTime = fabView.findViewById<TextView>(R.id.time_edit_text)
+
 
         //set start button on click listener
-        fabView.findViewById<Button>(R.id.start_bt).setOnClickListener {
+        setTimeView.findViewById<Button>(R.id.start_bt).setOnClickListener {
             if (isRunning) {
                 countdownTimer.cancel()
                 isRunning = false
@@ -129,12 +133,15 @@ class MainActivity : AppCompatActivity() {
             //set color to white
             val color = ContextCompat.getColor(applicationContext, R.color.white)
             binding.timer.setTextColor(color)
+            //make quickCountdown button invisible at start time
+            binding.quickCountdown.visibility = INVISIBLE
+            binding.timeControl.setImageResource(R.drawable.ic_baseline_pause_24)
             //dismiss dialog
             alertDialog.dismiss()
         }
 
         //initialize cancel button
-        val cancel = fabView.findViewById<ImageView>(R.id.cancel)
+        val cancel = setTimeView.findViewById<ImageView>(R.id.cancel)
         //set cancel button on click listener
         cancel.setOnClickListener {
             //dismiss dialog
@@ -142,12 +149,12 @@ class MainActivity : AppCompatActivity() {
         }
         //increase value when clicked
         var value = 0
-        fabView.findViewById<ImageView>(R.id.increment).setOnClickListener {
+        setTimeView.findViewById<ImageView>(R.id.s_increment).setOnClickListener {
             value += 1
             setTime.text = value.toString()
         }
         //decrease value when clicked
-        fabView.findViewById<ImageView>(R.id.decrement).setOnClickListener {
+        setTimeView.findViewById<ImageView>(R.id.s_decrement).setOnClickListener {
             if (value > 0) {
                 value -= 1
                 setTime.text = value.toString()
@@ -177,6 +184,7 @@ class MainActivity : AppCompatActivity() {
                 binding.timer.textSize = 100F
                 binding.timer.text = "TIME'S UP"
                 binding.timeControl.visibility = GONE
+                binding.quickCountdown.visibility = VISIBLE
                 val color = ContextCompat.getColor(applicationContext, R.color.red)
                 binding.timer.setTextColor(color)
 
