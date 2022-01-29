@@ -80,7 +80,8 @@ class MainActivity : AppCompatActivity() {
 
 
         //initialize set time textView
-        val setTime = setTimeView.findViewById<TextView>(R.id.seconds_text)
+        val setSeconds = setTimeView.findViewById<TextView>(R.id.seconds_text)
+        val setMinutes = setTimeView.findViewById<TextView>(R.id.minute_text)
 
         //Timer controls
         binding.timeControl.setOnClickListener{
@@ -95,7 +96,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.quickCountdown.setOnClickListener {
-            setTime.text = "0"
+            setSeconds.text = "0"
             alertDialog.show()
 
 
@@ -123,11 +124,11 @@ class MainActivity : AppCompatActivity() {
                 countdownTimer.cancel()
                 isRunning = false
 
-                timeInMilliSeconds = setTime.text.toString().toLong() * 60000L
+                timeInMilliSeconds = setMinutes.text.toString().toLong().times(3600000L).toLong().plus(setSeconds.text.toString().toLong() * 60000L)
                 startTimer(timeInMilliSeconds, this)
             } else {
                 resetTimer()
-                timeInMilliSeconds = setTime.text.toString().toLong() * 60000L
+                timeInMilliSeconds = setMinutes.text.toString().toLong().times(3600000L).toLong().plus(setSeconds.text.toString().toLong() * 60000L)
                 startTimer(timeInMilliSeconds, this)
             }
             //set color to white
@@ -147,17 +148,39 @@ class MainActivity : AppCompatActivity() {
             //dismiss dialog
             alertDialog.dismiss()
         }
-        //increase value when clicked
-        var value = 0
+        //increase seconds when clicked
+        var seconds = 0
+        //increase seconds on click
         setTimeView.findViewById<ImageView>(R.id.s_increment).setOnClickListener {
-            value += 1
-            setTime.text = value.toString()
+            if (seconds < 61){
+                seconds += 1
+                setSeconds.text = seconds.toString()
+            }
+
         }
-        //decrease value when clicked
+        //decrease seconds when clicked
         setTimeView.findViewById<ImageView>(R.id.s_decrement).setOnClickListener {
-            if (value > 0) {
-                value -= 1
-                setTime.text = value.toString()
+            if (seconds > 0) {
+                seconds -= 1
+                setSeconds.text = seconds.toString()
+            }
+        }
+
+        //increase minute when clicked
+        var minutes = 0
+        //increase minute on click
+        setTimeView.findViewById<ImageView>(R.id.m_increment).setOnClickListener {
+            if (minutes < 61){
+                minutes += 1
+                setMinutes.text = minutes.toString()
+            }
+
+        }
+        //decrease minutes when clicked
+        setTimeView.findViewById<ImageView>(R.id.m_decrement).setOnClickListener {
+            if (minutes > 0) {
+                minutes -= 1
+                setMinutes.text = minutes.toString()
             }
         }
 
