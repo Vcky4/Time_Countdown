@@ -19,9 +19,9 @@ class ScheduleAdapter: RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
             val minute = (schedules.taskTime / 1000) / 60
             val seconds = (schedules.taskTime / 1000) % 60
 
-            binding.serial.text = schedules.serial
+            binding.serial.text = schedules.serial+"."
             binding.taskName.text = schedules.taskName
-            binding.taskTime.text = "$minute : $seconds"
+            binding.taskTime.text = "${minute}m : ${seconds}s"
         }
     }
 
@@ -38,8 +38,8 @@ class ScheduleAdapter: RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val schedule = schedule[position.plus(1)]
-        schedule.serial = position.toString()
+        val schedule = schedule[position]
+        schedule.serial = position.plus(1).toString()
         holder.bindItems(schedule)
     }
 
