@@ -22,6 +22,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.vicksoson.timecountdown.adapter.ScheduleAdapter
 import com.vicksoson.timecountdown.databinding.ActivityMainBinding
 import com.vicksoson.timecountdown.databinding.MenuOptionBinding
+import com.vicksoson.timecountdown.databinding.SetScheduleTimeBinding
 import com.vicksoson.timecountdown.viewmodel.MainViewModel
 
 
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var menuBinding: MenuOptionBinding
+    private lateinit var scheduleBinding: SetScheduleTimeBinding
 
     private var mInterstitialAd: InterstitialAd? = null
     private var tag = "MainActivity"
@@ -82,11 +84,17 @@ class MainActivity : AppCompatActivity() {
         //menu alert builder
         val menuBuilder = AlertDialog.Builder(this)
         menuBinding = MenuOptionBinding.inflate(layoutInflater)
-        val menu = layoutInflater.inflate(R.layout.menu_option, null)
         menuBuilder.setView(menuBinding.root)
         val alertMenu = menuBuilder.create()
 
         val soundSwitch = menuBinding.soundSwitch
+
+        //set schedule alert dialog
+        val scheduleBuilder = AlertDialog.Builder(this)
+        scheduleBinding = SetScheduleTimeBinding.inflate(layoutInflater)
+        menuBuilder.setView(scheduleBinding.root)
+        val alertSchedule = menuBuilder.create()
+
 
         binding.quickCountdown.setOnClickListener {
             mainViewModel.resetValues()
@@ -267,7 +275,10 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.schedules.observe(this, {
             adapter.setUpSchedules(it)
         })
-    }
 
+        menuBinding.addBt.setOnClickListener {
+            alertSchedule.show()
+        }
+    }
 
 }

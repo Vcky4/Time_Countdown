@@ -91,6 +91,7 @@
 <!--        android:contentDescription="add schedule countdown" />-->
 
     <Button
+        android:id="@+id/add_bt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="add new"

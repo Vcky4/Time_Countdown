@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/menu_option.xml" value="0.25" />
         <entry key="app/src/main/res/layout/schedule_item.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/set_schedule_time.xml" value="0.22" />
         <entry key="app/src/main/res/layout/set_timmer.xml" value="0.16" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.20615384615384616" />
       </map>
