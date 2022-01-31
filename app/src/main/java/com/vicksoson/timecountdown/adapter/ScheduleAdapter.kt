@@ -38,7 +38,7 @@ class ScheduleAdapter: RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val schedule = schedule[position]
+        val schedule = schedule[position.plus(1)]
         schedule.serial = position.toString()
         holder.bindItems(schedule)
     }
