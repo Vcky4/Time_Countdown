@@ -48,7 +48,7 @@ class MainViewModel : ViewModel() {
 
     fun updateTime() {
         _time.value =
-            minutes.value?.toLong()?.times(60000L)?.plus((seconds.value?.toLong()?.times(6000L)!!))
+            minutes.value?.toLong()?.times(60000L)?.plus((seconds.value?.toLong()?.times(1000L)!!))
     }
 
     fun setTime(p0: Long) {
