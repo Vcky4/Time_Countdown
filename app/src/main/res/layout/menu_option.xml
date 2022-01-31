@@ -48,6 +48,7 @@
         android:text="Schedules"
         android:textColor="@color/white"
         android:textStyle="bold"
+        android:paddingVertical="10dp"
         android:paddingHorizontal="20dp"
         android:textSize="30sp"/>
 
@@ -57,4 +58,40 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/schedules"
         android:padding="10dp"/>
+
+<!--    <TextView-->
+<!--        android:id="@+id/text"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="add countdown schedule"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/add_schedule"-->
+<!--        android:textColor="@android:color/darker_gray"-->
+<!--        android:textSize="20sp"/>-->
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/add_schedule"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintStart_toStartOf="@id/text"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/text"-->
+<!--        app:maxImageSize="40dp"-->
+<!--        app:backgroundTint="@color/black"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/recycler_view"-->
+<!--        android:src="@drawable/ic_baseline_add_24"-->
+<!--        android:contentDescription="add schedule countdown" />-->
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="add new"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/schedules"
+        android:textColor="@color/white"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/schedules"
+        android:layout_marginHorizontal="20dp"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

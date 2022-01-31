@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="0"
+        android:text="0 : 0"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         android:textColor="@color/white"
         android:textSize="120sp"
@@ -51,23 +51,34 @@
         app:layout_constraintTop_toBottomOf="@id/quick_countdown"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/floatingActionButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:backgroundTintMode="multiply"-->
+<!--        android:clickable="true"-->
+<!--        android:contentDescription="set time button"-->
+<!--        android:focusable="true"-->
+<!--        android:tint="@color/white"-->
+<!--        android:tintMode="src_in"-->
+<!--        app:backgroundTint="@color/black"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:srcCompat="@drawable/ic_baseline_restore_24"-->
+<!--        tools:ignore="HardcodedText" />-->
+
+    <ImageButton
+        android:id="@+id/menuButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:backgroundTintMode="multiply"
-        android:clickable="true"
-        android:contentDescription="set time button"
-        android:focusable="true"
-        android:tint="@color/white"
-        android:tintMode="src_in"
-        app:backgroundTint="@color/black"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_baseline_restore_24"
-        tools:ignore="HardcodedText" />
+        android:src="@drawable/ic_baseline_menu_24"
+        android:background="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="30dp"
+        android:contentDescription="menu button" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/alamFloatingActionButton"
@@ -81,7 +92,7 @@
         android:tint="@color/white"
         android:tintMode="src_in"
         app:backgroundTint="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_notifications_24"
         tools:ignore="HardcodedText,RedundantDescriptionCheck" />

@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
 
 
 //        mainViewModel.isEnabled.observe(this, { state ->
-            binding.alamFloatingActionButton.setOnClickListener {
+            binding.menuButton.setOnClickListener {
                 alertMenu.show()
                 soundSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
                     if (buttonView.isChecked){
