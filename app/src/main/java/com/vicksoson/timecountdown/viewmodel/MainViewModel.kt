@@ -2,6 +2,8 @@ package com.vicksoson.timecountdown.viewmodel
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Application
+import android.content.Context
 import android.media.MediaPlayer
 import android.os.CountDownTimer
 import android.util.Log
@@ -11,6 +13,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.vicksoson.timecountdown.R
 
 class MainViewModel : ViewModel() {
@@ -101,12 +104,26 @@ class MainViewModel : ViewModel() {
     }
 
 
-    fun startTimer(time_in_seconds: Long) {
+    fun startTimer(time_in_seconds: Long, context: Context) {
         countdownTimer = object : CountDownTimer(time_in_seconds, 1000) {
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
-                setRunning(false)
+                _isRunning.value = false
                 _isFinished.value = true
+
+                val sound = MediaPlayer.create(context, R.raw.ding_sound)
+                if (isEnabled.value == true) {
+                    sound.start()
+                } else {
+                    sound.stop()
+                }
+//
+//                //show ads
+//                if (mInterstitialAd != null) {
+//                    mInterstitialAd?.show(this)
+//                } else {
+//                    Log.d("TAG", "The interstitial ad wasn't ready yet.")
+//                }
             }
 
             override fun onTick(p0: Long) {
@@ -115,17 +132,29 @@ class MainViewModel : ViewModel() {
 
         }
         countdownTimer.start()
-        setRunning(true)
+        _isRunning.value = true
         _isFinished.value = false
 
 
     }
     fun pauseTimer() {
         countdownTimer.cancel()
-        setRunning(false)
+        _isRunning.value = false
+        _isPaused.value = true
     }
-    fun resumeTime(){
-        currentTime.value?.let { startTimer(it) }
+    fun playSound(context: Context){
+        if (isFinished.value == true){
+            val sound = MediaPlayer.create(context, R.raw.ding_sound)
+            if (isEnabled.value == true) {
+                sound.start()
+            } else {
+                sound.stop()
+            }
+        }
+    }
+    fun resumeTime(context: Context){
+        currentTime.value?.let { startTimer(it,context) }
+        _isPaused.value = false
     }
 
 }
