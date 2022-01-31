@@ -136,9 +136,9 @@ class MainActivity : AppCompatActivity() {
                 alertMenu.show()
                 soundSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
                     if (buttonView.isChecked){
-                        mainViewModel.setEnable(true)
+                        mainViewModel.setEnable(isChecked)
                     }else{
-                        mainViewModel.setEnable(false)
+                        mainViewModel.setEnable(isChecked)
                     }
                 }
 
