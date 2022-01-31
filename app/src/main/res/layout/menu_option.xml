@@ -33,6 +33,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:trackTint="@android:color/holo_green_dark"
             android:paddingHorizontal="20dp"
             app:switchPadding="20dp" />
 
