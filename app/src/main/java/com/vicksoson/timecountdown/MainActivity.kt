@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View.*
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -21,12 +22,14 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.vicksoson.timecountdown.databinding.ActivityMainBinding
+import com.vicksoson.timecountdown.databinding.MenuOptionBinding
 import com.vicksoson.timecountdown.viewmodel.MainViewModel
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var menuBinding: MenuOptionBinding
 
     private var mInterstitialAd: InterstitialAd? = null
     private var tag = "MainActivity"
@@ -64,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             })
 
 
-        //alert builder
+        //set time alert builder
         val builder = AlertDialog.Builder(this)
         val setTimeView = layoutInflater.inflate(R.layout.set_timmer, null)
         builder.setView(setTimeView)
@@ -75,6 +78,16 @@ class MainActivity : AppCompatActivity() {
         //initialize set time textView
         val setSeconds = setTimeView.findViewById<TextView>(R.id.seconds_text)
         val setMinutes = setTimeView.findViewById<TextView>(R.id.minute_text)
+
+
+        //menu alert builder
+        val menuBuilder = AlertDialog.Builder(this)
+        menuBinding = MenuOptionBinding.inflate(layoutInflater)
+        val menu = layoutInflater.inflate(R.layout.menu_option, null)
+        menuBuilder.setView(menuBinding.root)
+        val alertMenu = menuBuilder.create()
+
+        val soundSwitch = menuBinding.soundSwitch
 
         binding.quickCountdown.setOnClickListener {
             mainViewModel.resetValues()
@@ -108,21 +121,34 @@ class MainActivity : AppCompatActivity() {
         // enable and disable sound
         mainViewModel.isEnabled.observe(this, { state ->
             if (!state) {
+                soundSwitch.isChecked = false
                 binding.alamFloatingActionButton.setImageResource(R.drawable.ic_baseline_notifications_off_24)
             } else {
+                soundSwitch.isChecked = true
                 binding.alamFloatingActionButton.setImageResource(R.drawable.ic_baseline_notifications_24)
             }
         })
 
-        mainViewModel.isEnabled.observe(this, { state ->
+
+
+//        mainViewModel.isEnabled.observe(this, { state ->
             binding.alamFloatingActionButton.setOnClickListener {
-                if (state) {
-                    mainViewModel.setEnable(false)
-                } else {
-                    mainViewModel.setEnable(true)
+                alertMenu.show()
+                soundSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+                    if (buttonView.isChecked){
+                        mainViewModel.setEnable(true)
+                    }else{
+                        mainViewModel.setEnable(false)
+                    }
                 }
+
+//                if (state) {
+//                    mainViewModel.setEnable(false)
+//                } else {
+//                    mainViewModel.setEnable(true)
+//                }
             }
-        })
+//        })
 
         mainViewModel.isRunning.observe(this, { isRunning ->
             //set start button on click listener
