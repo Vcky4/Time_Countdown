@@ -7,20 +7,19 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View.*
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Switch
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.vicksoson.timecountdown.adapter.ScheduleAdapter
 import com.vicksoson.timecountdown.databinding.ActivityMainBinding
 import com.vicksoson.timecountdown.databinding.MenuOptionBinding
 import com.vicksoson.timecountdown.viewmodel.MainViewModel
@@ -260,6 +259,14 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        val adapter =  ScheduleAdapter()
+        val recycler = menuBinding.recyclerView
+        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.adapter = adapter
+
+        mainViewModel.schedules.observe(this, {
+            adapter.setUpSchedules(it)
+        })
     }
 
 

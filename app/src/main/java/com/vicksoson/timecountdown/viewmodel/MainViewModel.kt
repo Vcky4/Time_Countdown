@@ -15,6 +15,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.vicksoson.timecountdown.R
+import com.vicksoson.timecountdown.adapter.ScheduleAdapter
+import com.vicksoson.timecountdown.models.ScheduleItems
 
 class MainViewModel : ViewModel() {
 
@@ -27,10 +29,20 @@ class MainViewModel : ViewModel() {
     private val _isRunning = MutableLiveData<Boolean>()
     private val _isFinished = MutableLiveData<Boolean>()
     private val _isPaused = MutableLiveData<Boolean>()
+    private val _schedule = MutableLiveData<List<ScheduleItems>>(
+        listOf(
+            ScheduleItems("", "school", 60000L),
+            ScheduleItems("", "exercise", 60000L),
+            ScheduleItems("", "work", 600000L),
+        )
+
+
+    )
 
 
     val finished = "TIME'S UP"
     var isEnabled: LiveData<Boolean> = _isEnable
+    var schedules: LiveData<List<ScheduleItems>> = _schedule
     var isPaused: LiveData<Boolean> = _isPaused
     var isRunning: LiveData<Boolean> = _isRunning
     var isFinished: LiveData<Boolean> = _isFinished
@@ -156,5 +168,7 @@ class MainViewModel : ViewModel() {
         currentTime.value?.let { startTimer(it,context) }
         _isPaused.value = false
     }
+
+
 
 }
