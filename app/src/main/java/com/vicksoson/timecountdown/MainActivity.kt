@@ -191,7 +191,7 @@ class MainActivity : AppCompatActivity() {
                 binding.quickCountdown.visibility = INVISIBLE
                 binding.timeControl.setImageResource(R.drawable.ic_baseline_pause_24)
                 binding.timeControl.visibility = VISIBLE
-                binding.timer.textSize = 120F
+                binding.timer.textSize = mainViewModel.RunSize
             } else {
                 binding.timeControl.setImageResource(R.drawable.ic_baseline_play_arrow_24)
                 binding.quickCountdown.visibility = VISIBLE
@@ -255,7 +255,7 @@ class MainActivity : AppCompatActivity() {
         })
         mainViewModel.isFinished.observe(this, {
             if (it) {
-                binding.timer.textSize = 100F
+                binding.timer.textSize = mainViewModel.finishSize
                 binding.timeControl.visibility = GONE
                 binding.timer.text = mainViewModel.finished
 

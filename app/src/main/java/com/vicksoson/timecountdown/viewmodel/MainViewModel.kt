@@ -12,6 +12,8 @@ import com.vicksoson.timecountdown.models.ScheduleItems
 
 class MainViewModel : ViewModel() {
 
+    val finishSize = 90F
+    val RunSize = 90F
     private lateinit var countdownTimer: CountDownTimer
     private val _minutes = MutableLiveData<Int>()
     private val _seconds = MutableLiveData<Int>()
