@@ -13,7 +13,7 @@ import com.vicksoson.timecountdown.models.ScheduleItems
 class MainViewModel : ViewModel() {
 
     val finishSize = 90F
-    val RunSize = 90F
+    val runSize = 90F
     private lateinit var countdownTimer: CountDownTimer
     private val _minutes = MutableLiveData<Int>()
     private val _seconds = MutableLiveData<Int>()
@@ -23,8 +23,8 @@ class MainViewModel : ViewModel() {
     private val _isRunning = MutableLiveData<Boolean>()
     private val _isFinished = MutableLiveData<Boolean>()
     private val _isPaused = MutableLiveData<Boolean>()
-    private val scheduleList = mutableListOf<ScheduleItems>()
-    private val _schedule = MutableLiveData<List<ScheduleItems>>( scheduleList )
+    val scheduleList = mutableListOf<ScheduleItems>()
+    private val _schedule = MutableLiveData<List<ScheduleItems>>()
 
     val finished = "TIME'S UP"
     var isEnabled: LiveData<Boolean> = _isEnable
@@ -104,6 +104,7 @@ class MainViewModel : ViewModel() {
 
     fun addSchedule(schedule: ScheduleItems){
         scheduleList.add(schedule)
+
     }
 
 

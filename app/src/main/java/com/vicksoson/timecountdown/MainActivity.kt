@@ -1,17 +1,13 @@
 package com.vicksoson.timecountdown
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.view.View.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
@@ -138,24 +134,23 @@ class MainActivity : AppCompatActivity() {
         })
 
 
-
 //        mainViewModel.isEnabled.observe(this, { state ->
-            binding.menuButton.setOnClickListener {
-                alertMenu.show()
-                soundSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-                    if (buttonView.isChecked){
-                        mainViewModel.setEnable(isChecked)
-                    }else{
-                        mainViewModel.setEnable(isChecked)
-                    }
+        binding.menuButton.setOnClickListener {
+            alertMenu.show()
+            soundSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (buttonView.isChecked) {
+                    mainViewModel.setEnable(isChecked)
+                } else {
+                    mainViewModel.setEnable(isChecked)
                 }
+            }
 
 //                if (state) {
 //                    mainViewModel.setEnable(false)
 //                } else {
 //                    mainViewModel.setEnable(true)
 //                }
-            }
+        }
 //        })
 
         mainViewModel.isRunning.observe(this, { isRunning ->
@@ -192,7 +187,7 @@ class MainActivity : AppCompatActivity() {
                 binding.quickCountdown.visibility = INVISIBLE
                 binding.timeControl.setImageResource(R.drawable.ic_baseline_pause_24)
                 binding.timeControl.visibility = VISIBLE
-                binding.timer.textSize = mainViewModel.RunSize
+                binding.timer.textSize = mainViewModel.runSize
             } else {
                 binding.timeControl.setImageResource(R.drawable.ic_baseline_play_arrow_24)
                 binding.quickCountdown.visibility = VISIBLE
@@ -270,14 +265,11 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        val adapter =  ScheduleAdapter()
+        val adapter = ScheduleAdapter()
         val recycler = menuBinding.recyclerView
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
 
-        mainViewModel.schedules.observe(this, {
-            adapter.setUpSchedules(it)
-        })
 
         menuBinding.addBt.setOnClickListener {
             alertSchedule.show()
@@ -285,14 +277,18 @@ class MainActivity : AppCompatActivity() {
 
 
         scheduleBinding.setBt.setOnClickListener {
+        //add to schedule list
             mainViewModel.addSchedule(
                 ScheduleItems(
                     "",
                     scheduleBinding.taskName.text.toString(),
                     scheduleBinding.minsText.text.toString().toLong().times(60000L).plus(
-                        scheduleBinding.secsText.text.toString().toLong().times(1000L))
+                        scheduleBinding.secsText.text.toString().toLong().times(1000L)
+                    )
                 )
             )
+            adapter.setUpSchedules(mainViewModel.scheduleList)
+            alertSchedule.dismiss()
         }
 
 
