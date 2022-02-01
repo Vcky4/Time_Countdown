@@ -23,16 +23,8 @@ class MainViewModel : ViewModel() {
     private val _isRunning = MutableLiveData<Boolean>()
     private val _isFinished = MutableLiveData<Boolean>()
     private val _isPaused = MutableLiveData<Boolean>()
-    private val _schedule = MutableLiveData<List<ScheduleItems>>(
-        listOf(
-            ScheduleItems("", "school", 60000L),
-            ScheduleItems("", "exercise", 60000L),
-            ScheduleItems("", "work", 600000L),
-        )
-
-
-    )
-
+    private val scheduleList = mutableListOf<ScheduleItems>()
+    private val _schedule = MutableLiveData<List<ScheduleItems>>( scheduleList )
 
     val finished = "TIME'S UP"
     var isEnabled: LiveData<Boolean> = _isEnable
@@ -107,6 +99,11 @@ class MainViewModel : ViewModel() {
             s -= 1
             _seconds.value = s
         }
+    }
+
+
+    fun addSchedule(schedule: ScheduleItems){
+        scheduleList.add(schedule)
     }
 
 

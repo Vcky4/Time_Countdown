@@ -23,6 +23,7 @@ import com.vicksoson.timecountdown.adapter.ScheduleAdapter
 import com.vicksoson.timecountdown.databinding.ActivityMainBinding
 import com.vicksoson.timecountdown.databinding.MenuOptionBinding
 import com.vicksoson.timecountdown.databinding.SetScheduleTimeBinding
+import com.vicksoson.timecountdown.models.ScheduleItems
 import com.vicksoson.timecountdown.viewmodel.MainViewModel
 
 
@@ -283,6 +284,16 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        scheduleBinding.setBt.setOnClickListener {
+            mainViewModel.addSchedule(
+                ScheduleItems(
+                    "",
+                    scheduleBinding.taskName.text.toString(),
+                    scheduleBinding.minsText.text.toString().toLong().times(60000L).plus(
+                        scheduleBinding.secsText.text.toString().toLong().times(1000L))
+                )
+            )
+        }
 
 
     }
