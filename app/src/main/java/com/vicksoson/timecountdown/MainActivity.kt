@@ -167,6 +167,7 @@ class MainActivity : AppCompatActivity() {
                     mainViewModel.time.observe(this, { time ->
                         binding.timer.textSize = 120F
                         mainViewModel.startTimer(time, applicationContext)
+                        mainViewModel.paused(false)
 
                     })
                 } else {
@@ -174,6 +175,7 @@ class MainActivity : AppCompatActivity() {
                     mainViewModel.time.observe(this, { time ->
                         binding.timer.textSize = 120F
                         mainViewModel.startTimer(time, applicationContext)
+                        mainViewModel.paused(false)
 
                     })
 
@@ -279,6 +281,10 @@ class MainActivity : AppCompatActivity() {
         menuBinding.addBt.setOnClickListener {
             alertSchedule.show()
         }
+
+
+
+
     }
 
 }

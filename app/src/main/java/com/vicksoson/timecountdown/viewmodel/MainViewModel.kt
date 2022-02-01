@@ -1,21 +1,13 @@
 package com.vicksoson.timecountdown.viewmodel
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.media.MediaPlayer
 import android.os.CountDownTimer
-import android.util.Log
-import android.view.View
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.vicksoson.timecountdown.R
-import com.vicksoson.timecountdown.adapter.ScheduleAdapter
 import com.vicksoson.timecountdown.models.ScheduleItems
 
 class MainViewModel : ViewModel() {
@@ -71,7 +63,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun paused(state: Boolean){
-        _isPaused.value = true
+        _isPaused.value = state
     }
 
     fun setCurrentTime(cTime: Long) {
@@ -120,15 +112,19 @@ class MainViewModel : ViewModel() {
         countdownTimer = object : CountDownTimer(time_in_seconds, 1000) {
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
-                _isRunning.value = false
-                _isFinished.value = true
 
-                val sound = MediaPlayer.create(context, R.raw.ding_sound)
-                if (isEnabled.value == true) {
-                    sound.start()
-                } else {
-                    sound.stop()
+                if(isPaused.value == false){
+                    val sound = MediaPlayer.create(context, R.raw.ding_sound)
+                    if (isEnabled.value == true) {
+                        sound.start()
+                    } else {
+                        sound.stop()
+                    }
+                    _isRunning.value = false
+                    _isFinished.value = true
+
                 }
+
 //
 //                //show ads
 //                if (mInterstitialAd != null) {
@@ -140,32 +136,27 @@ class MainViewModel : ViewModel() {
 
             override fun onTick(p0: Long) {
                 _currentTime.value = p0
+                if (_isPaused.value == true){
+                    cancel()
+                }
             }
 
-        }
-        countdownTimer.start()
+        }.start()
         _isRunning.value = true
         _isFinished.value = false
-
-
     }
     fun pauseTimer() {
         countdownTimer.cancel()
+        _time.value = currentTime.value
         _isRunning.value = false
         _isPaused.value = true
+
     }
-    fun playSound(context: Context){
-        if (isFinished.value == true){
-            val sound = MediaPlayer.create(context, R.raw.ding_sound)
-            if (isEnabled.value == true) {
-                sound.start()
-            } else {
-                sound.stop()
-            }
-        }
-    }
+
     fun resumeTime(context: Context){
-        currentTime.value?.let { startTimer(it,context) }
+//        countdownTimer.start()
+        time.value?.let { startTimer(it, context) }
+        _isRunning.value = true
         _isPaused.value = false
     }
 
