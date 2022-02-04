@@ -25,8 +25,12 @@ class ScheduleAdapter: RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
         }
     }
 
-    fun setUpSchedules(schedule: List<ScheduleItems>){
-        this.schedule.addAll(schedule)
+    fun setUpSchedules(schedules: List<ScheduleItems>){
+        if(schedule.isEmpty()){
+            this.schedule.addAll(schedules)
+        }else if (schedule.size < schedules.size){
+            this.schedule.add(schedules.last())
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,6 +45,11 @@ class ScheduleAdapter: RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
         val schedule = schedule[position]
         schedule.serial = position.plus(1).toString()
         holder.bindItems(schedule)
+    }
+
+    private var onItemClickListener: ((ScheduleItems) -> Unit)? = null
+    fun setOnItemClickListener(listener: (ScheduleItems) -> Unit) {
+        onItemClickListener = listener
     }
 
     override fun getItemCount(): Int {

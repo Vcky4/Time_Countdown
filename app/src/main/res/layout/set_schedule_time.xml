@@ -70,8 +70,8 @@
             android:id="@+id/mins_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="number"
             android:background="@color/black"
+            android:inputType="number"
             android:textColor="@color/white"
             android:textSize="20sp"
            />
@@ -104,6 +104,7 @@
         android:layout_height="wrap_content"
         android:text="set"
         android:textColor="@color/black"
+        android:enabled="false"
         app:layout_constraintTop_toBottomOf="@id/task_time_layout1"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/white"

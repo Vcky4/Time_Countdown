@@ -23,7 +23,7 @@ class MainViewModel : ViewModel() {
     private val _isRunning = MutableLiveData<Boolean>()
     private val _isFinished = MutableLiveData<Boolean>()
     private val _isPaused = MutableLiveData<Boolean>()
-    val scheduleList = mutableListOf<ScheduleItems>()
+    private val scheduleList = mutableListOf<ScheduleItems>()
     private val _schedule = MutableLiveData<List<ScheduleItems>>()
 
     val finished = "TIME'S UP"
@@ -102,9 +102,20 @@ class MainViewModel : ViewModel() {
     }
 
 
-    fun addSchedule(schedule: ScheduleItems){
-        scheduleList.add(schedule)
-
+    fun addSchedule(taskName: String, mins: Int, secs: Int){
+        var min = mins
+        var sec = secs
+        if (mins > 60 && secs >= 60){
+            min = 59
+        }else if (mins > 60 && secs < 60){
+            min = 60
+        }
+        if (secs > 60){
+            sec = 60
+        }
+        val time = min.times(60000L).plus(sec.times(1000L))
+        scheduleList.add(ScheduleItems("", taskName, time))
+        _schedule.value = scheduleList
     }
 
 

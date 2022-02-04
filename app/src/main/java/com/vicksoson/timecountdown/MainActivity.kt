@@ -2,12 +2,15 @@ package com.vicksoson.timecountdown
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
@@ -89,8 +92,8 @@ class MainActivity : AppCompatActivity() {
         //set schedule alert dialog
         val scheduleBuilder = AlertDialog.Builder(this)
         scheduleBinding = SetScheduleTimeBinding.inflate(layoutInflater)
-        menuBuilder.setView(scheduleBinding.root)
-        val alertSchedule = menuBuilder.create()
+        scheduleBuilder.setView(scheduleBinding.root)
+        val alertSchedule = scheduleBuilder.create()
 
 
         binding.quickCountdown.setOnClickListener {
@@ -133,6 +136,8 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        val list = mutableListOf<ScheduleItems>()
+        val adapter = ScheduleAdapter()
 
 //        mainViewModel.isEnabled.observe(this, { state ->
         binding.menuButton.setOnClickListener {
@@ -145,13 +150,17 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-//                if (state) {
-//                    mainViewModel.setEnable(false)
-//                } else {
-//                    mainViewModel.setEnable(true)
-//                }
+
         }
-//        })
+
+        val recycler = menuBinding.recyclerView
+        recycler.layoutManager = LinearLayoutManager(this)
+
+        mainViewModel.schedules.observe(this,{
+            adapter.setUpSchedules(it)
+        })
+        recycler.adapter = adapter
+
 
         mainViewModel.isRunning.observe(this, { isRunning ->
             //set start button on click listener
@@ -265,33 +274,66 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        val adapter = ScheduleAdapter()
-        val recycler = menuBinding.recyclerView
-        recycler.layoutManager = LinearLayoutManager(this)
-        recycler.adapter = adapter
 
+
+
+//        val owner: LifecycleOwner = this
 
         menuBinding.addBt.setOnClickListener {
             alertSchedule.show()
         }
 
 
-        scheduleBinding.setBt.setOnClickListener {
-        //add to schedule list
-            mainViewModel.addSchedule(
-                ScheduleItems(
-                    "",
-                    scheduleBinding.taskName.text.toString(),
-                    scheduleBinding.minsText.text.toString().toLong().times(60000L).plus(
-                        scheduleBinding.secsText.text.toString().toLong().times(1000L)
-                    )
-                )
-            )
-            adapter.setUpSchedules(mainViewModel.scheduleList)
-            alertSchedule.dismiss()
+
+        //text watcher
+        val watcher: TextWatcher = object : TextWatcher {
+
+            val taskName = scheduleBinding.taskName.text
+            val mins = scheduleBinding.minsText.text
+            val secs = scheduleBinding.secsText.text
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                //check if they are empty, make button not clickable
+                if (!(taskName.toString().isEmpty() || mins.toString().isEmpty() || secs.toString()
+                        .isEmpty())
+                ) {
+                    //enable button
+                    scheduleBinding.setBt.isEnabled = true
+
+
+                    //add to list
+                    scheduleBinding.setBt.setOnClickListener {
+
+                        Log.d("Main", "$mins, $secs")
+                        //add to schedule list
+                        mainViewModel.addSchedule(
+                            taskName.toString(), mins.toString().toInt(), secs.toString().toInt() )
+
+                        mins?.clear()
+                        secs?.clear()
+                        taskName?.clear()
+                        scheduleBinding.taskName.requestFocus()
+
+                        //dismiss alert
+                        alertSchedule.dismiss()
+                    }
+
+                } else {
+                    scheduleBinding.setBt.isEnabled = false
+                }
+
+            }
+            override fun afterTextChanged(s: Editable?) {}
+
         }
+
+        scheduleBinding.taskName.addTextChangedListener(watcher)
+        scheduleBinding.minsText.addTextChangedListener(watcher)
+        scheduleBinding.secsText.addTextChangedListener(watcher)
+
 
 
     }
-
 }
