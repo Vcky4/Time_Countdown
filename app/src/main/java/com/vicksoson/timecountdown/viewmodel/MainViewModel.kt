@@ -172,5 +172,20 @@ class MainViewModel : ViewModel() {
     }
 
 
+    fun startScheduleTime(schedule: Long, context: Context){
+        if(isRunning.value == true){
+            countdownTimer.cancel()
+            _time.value = schedule
+            time.value?.let { startTimer(it, context) }
+            _isRunning.value = true
+            _isPaused.value = false
+        }else{
+            _time.value = schedule
+            time.value?.let { startTimer(it, context) }
+            _isRunning.value = true
+            _isPaused.value = false
+        }
+
+    }
 
 }

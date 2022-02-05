@@ -333,36 +333,14 @@ class MainActivity : AppCompatActivity() {
         scheduleBinding.secsText.addTextChangedListener(watcher)
 
 
-
-        mainViewModel.isRunning.observe(this, { isRunning ->
             //set task on click listener
             adapter.setOnItemClickListener {
-                mainViewModel.resetValues()
-                if (isRunning) {
-                    mainViewModel.pauseTimer()
-                    mainViewModel.setRunning(false)
-                    mainViewModel.updateTime()
-                    mainViewModel.schedules.observe(this, {
-                        binding.timer.textSize = 120F
-                        mainViewModel.startTimer(it[adapter.serial].taskTime, applicationContext)
-                        mainViewModel.paused(false)
-
-                    })
-                } else {
-                    mainViewModel.updateTime()
-                    mainViewModel.schedules.observe(this, {
-                        binding.timer.textSize = 120F
-                        mainViewModel.startTimer(it[adapter.serial].taskTime, applicationContext)
-                        mainViewModel.paused(false)
-
-                    })
-
-                }
+                mainViewModel.schedules.observe(this, {
+                    mainViewModel.startScheduleTime(it[adapter.serial].taskTime, applicationContext)
+                })
                 //dismiss dialog
                 alertMenu.dismiss()
             }
-
-        })
 
 
     }
