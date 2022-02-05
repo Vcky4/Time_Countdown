@@ -23,6 +23,8 @@ class ScheduleAdapter: RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
             binding.taskName.text = schedules.taskName
             binding.taskTime.text = "${minute}m : ${seconds}s"
         }
+
+        val task = binding.scheduleIt
     }
 
     fun setUpSchedules(schedules: List<ScheduleItems>){
@@ -41,16 +43,28 @@ class ScheduleAdapter: RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
         )
     }
 
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val schedule = schedule[position]
         schedule.serial = position.plus(1).toString()
         holder.bindItems(schedule)
+
+        holder.task.setOnClickListener {
+            post(position)
+            onItemClickListener?.let { it(schedule) }
+        }
     }
 
     private var onItemClickListener: ((ScheduleItems) -> Unit)? = null
     fun setOnItemClickListener(listener: (ScheduleItems) -> Unit) {
         onItemClickListener = listener
     }
+    fun post (position: Int) {
+        serial = position
+    }
+
+    var serial: Int = 0
+
 
     override fun getItemCount(): Int {
         return schedule.size

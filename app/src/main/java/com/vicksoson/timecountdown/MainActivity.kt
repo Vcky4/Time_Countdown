@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity() {
         val recycler = menuBinding.recyclerView
         recycler.layoutManager = LinearLayoutManager(this)
 
-        mainViewModel.schedules.observe(this,{
+        mainViewModel.schedules.observe(this, {
             adapter.setUpSchedules(it)
         })
         recycler.adapter = adapter
@@ -275,14 +275,11 @@ class MainActivity : AppCompatActivity() {
         })
 
 
-
-
 //        val owner: LifecycleOwner = this
 
         menuBinding.addBt.setOnClickListener {
             alertSchedule.show()
         }
-
 
 
         //text watcher
@@ -309,7 +306,8 @@ class MainActivity : AppCompatActivity() {
                         Log.d("Main", "$mins, $secs")
                         //add to schedule list
                         mainViewModel.addSchedule(
-                            taskName.toString(), mins.toString().toInt(), secs.toString().toInt() )
+                            taskName.toString(), mins.toString().toInt(), secs.toString().toInt()
+                        )
 
                         mins?.clear()
                         secs?.clear()
@@ -325,6 +323,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
+
             override fun afterTextChanged(s: Editable?) {}
 
         }
@@ -333,6 +332,37 @@ class MainActivity : AppCompatActivity() {
         scheduleBinding.minsText.addTextChangedListener(watcher)
         scheduleBinding.secsText.addTextChangedListener(watcher)
 
+
+
+        mainViewModel.isRunning.observe(this, { isRunning ->
+            //set task on click listener
+            adapter.setOnItemClickListener {
+                mainViewModel.resetValues()
+                if (isRunning) {
+                    mainViewModel.pauseTimer()
+                    mainViewModel.setRunning(false)
+                    mainViewModel.updateTime()
+                    mainViewModel.schedules.observe(this, {
+                        binding.timer.textSize = 120F
+                        mainViewModel.startTimer(it[adapter.serial].taskTime, applicationContext)
+                        mainViewModel.paused(false)
+
+                    })
+                } else {
+                    mainViewModel.updateTime()
+                    mainViewModel.schedules.observe(this, {
+                        binding.timer.textSize = 120F
+                        mainViewModel.startTimer(it[adapter.serial].taskTime, applicationContext)
+                        mainViewModel.paused(false)
+
+                    })
+
+                }
+                //dismiss dialog
+                alertMenu.dismiss()
+            }
+
+        })
 
 
     }
