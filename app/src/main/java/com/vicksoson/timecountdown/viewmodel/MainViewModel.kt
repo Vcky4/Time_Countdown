@@ -25,19 +25,22 @@ class MainViewModel : ViewModel() {
     private val _isPaused = MutableLiveData<Boolean>()
     private val scheduleList = mutableListOf<ScheduleItems>()
     private val _schedule = MutableLiveData<List<ScheduleItems>>()
+    private val _taskText = MutableLiveData<String>()
+    private var m = 0
+    private var s = 0
 
+    //public variables
     val finished = "TIME'S UP"
     var isEnabled: LiveData<Boolean> = _isEnable
     var schedules: LiveData<List<ScheduleItems>> = _schedule
     var isPaused: LiveData<Boolean> = _isPaused
     var isRunning: LiveData<Boolean> = _isRunning
     var isFinished: LiveData<Boolean> = _isFinished
-    private var m = 0
-    private var s = 0
     val minutes: LiveData<Int> = _minutes
     val seconds: LiveData<Int> = _seconds
     val time: LiveData<Long> = _time
     val currentTime: LiveData<Long> = _currentTime
+    val taskText: LiveData<String> = _taskText
 
     fun setRunning(state: Boolean) {
         _isRunning.value = state
@@ -52,17 +55,15 @@ class MainViewModel : ViewModel() {
             minutes.value?.toLong()?.times(60000L)?.plus((seconds.value?.toLong()?.times(1000L)!!))
     }
 
-    fun setTime(p0: Long) {
-        _time.value = p0
+    fun setTaskText(task: String){
+        _taskText.value = task
     }
 
     fun paused(state: Boolean){
         _isPaused.value = state
     }
 
-    fun setCurrentTime(cTime: Long) {
-        _currentTime.value = cTime
-    }
+
 
     fun resetValues() {
         _minutes.value = 0
@@ -136,13 +137,6 @@ class MainViewModel : ViewModel() {
 
                 }
 
-//
-//                //show ads
-//                if (mInterstitialAd != null) {
-//                    mInterstitialAd?.show(this)
-//                } else {
-//                    Log.d("TAG", "The interstitial ad wasn't ready yet.")
-//                }
             }
 
             override fun onTick(p0: Long) {
@@ -165,7 +159,6 @@ class MainViewModel : ViewModel() {
     }
 
     fun resumeTime(context: Context){
-//        countdownTimer.start()
         time.value?.let { startTimer(it, context) }
         _isRunning.value = true
         _isPaused.value = false

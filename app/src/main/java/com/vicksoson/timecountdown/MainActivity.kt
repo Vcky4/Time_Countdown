@@ -173,17 +173,16 @@ class MainActivity : AppCompatActivity() {
                         binding.timer.textSize = 120F
                         mainViewModel.startTimer(time, applicationContext)
                         mainViewModel.paused(false)
-
                     })
+                    mainViewModel.setTaskText("Quick countdown")
                 } else {
                     mainViewModel.updateTime()
                     mainViewModel.time.observe(this, { time ->
                         binding.timer.textSize = 120F
                         mainViewModel.startTimer(time, applicationContext)
                         mainViewModel.paused(false)
-
                     })
-
+                    mainViewModel.setTaskText("Quick countdown")
                 }
                 //dismiss dialog
                 alertDialog.dismiss()
@@ -328,15 +327,22 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        //add watchers to edit texts
         scheduleBinding.taskName.addTextChangedListener(watcher)
         scheduleBinding.minsText.addTextChangedListener(watcher)
         scheduleBinding.secsText.addTextChangedListener(watcher)
 
+        //set task text
+        mainViewModel.taskText.observe(this,{
+            binding.taskDisplayName.text = it
+        })
 
-            //set task on click listener
+
+        //set task on click listener
             adapter.setOnItemClickListener {
                 mainViewModel.schedules.observe(this, {
                     mainViewModel.startScheduleTime(it[adapter.serial].taskTime, applicationContext)
+                    mainViewModel.setTaskText(it[adapter.serial].taskName)
                 })
                 //dismiss dialog
                 alertMenu.dismiss()
