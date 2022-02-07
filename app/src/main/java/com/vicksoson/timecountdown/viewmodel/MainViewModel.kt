@@ -21,7 +21,7 @@ class MainViewModel : ViewModel() {
     private val _time = MutableLiveData<Long>()
     private val _currentTime = MutableLiveData<Long>()
     private val _isEnable = MutableLiveData(true)
-    private val _isRunning = MutableLiveData<Boolean>()
+    private val _isRunning = MutableLiveData<Boolean?>()
     private val _isFinished = MutableLiveData<Boolean>()
     private val _isPaused = MutableLiveData<Boolean>()
     private val scheduleList = mutableListOf<ScheduleItems>()
@@ -35,7 +35,7 @@ class MainViewModel : ViewModel() {
     var isEnabled: LiveData<Boolean> = _isEnable
     var schedules: LiveData<List<ScheduleItems>> = _schedule
     var isPaused: LiveData<Boolean> = _isPaused
-    var isRunning: LiveData<Boolean> = _isRunning
+    var isRunning: LiveData<Boolean?> = _isRunning
     var isFinished: LiveData<Boolean> = _isFinished
     val minutes: LiveData<Int> = _minutes
     val seconds: LiveData<Int> = _seconds
@@ -52,8 +52,12 @@ class MainViewModel : ViewModel() {
     }
 
     fun updateTime() {
-        _time.value =
-            minutes.value?.toLong()?.times(60000L)?.plus((seconds.value?.toLong()?.times(1000L)!!))
+        val value = minutes.value?.toLong()?.times(60000L)?.plus((seconds.value?.toLong()?.times(1000L)!!))
+        if (value != null) {
+            if (value > 0){
+                _time.value = value!!
+            }
+        }
     }
 
     fun setTaskText(task: String) {
@@ -70,7 +74,7 @@ class MainViewModel : ViewModel() {
         _seconds.value = 0
         m = 0
         s = 0
-        _isRunning.value = false
+        _isRunning.value = null
     }
 
     fun mIncrement() {
@@ -125,7 +129,7 @@ class MainViewModel : ViewModel() {
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
 
-//                if(isPaused.value == false){
+                if(isPaused.value == false){
                 val sound = MediaPlayer.create(context, R.raw.ding_sound)
                 if (isEnabled.value == true) {
                     sound.start()
@@ -135,7 +139,7 @@ class MainViewModel : ViewModel() {
                 cancel()
                 _isRunning.value = false
                 _isFinished.value = true
-//                }
+                }
 
             }
 
@@ -152,10 +156,13 @@ class MainViewModel : ViewModel() {
     }
 
     fun pauseTimer() {
-        countdownTimer.cancel()
-        _time.value = currentTime.value
-        _isRunning.value = false
-        _isPaused.value = true
+        if(isRunning.value == true){
+            countdownTimer.cancel()
+            _time.value = currentTime.value
+            _isRunning.value = false
+            _isPaused.value = true
+        }
+
 
     }
 

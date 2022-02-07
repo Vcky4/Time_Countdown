@@ -10,7 +10,6 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
@@ -22,7 +21,7 @@ import com.vicksoson.timecountdown.adapter.ScheduleAdapter
 import com.vicksoson.timecountdown.databinding.ActivityMainBinding
 import com.vicksoson.timecountdown.databinding.MenuOptionBinding
 import com.vicksoson.timecountdown.databinding.SetScheduleTimeBinding
-import com.vicksoson.timecountdown.models.ScheduleItems
+import com.vicksoson.timecountdown.databinding.SetTimmerBinding
 import com.vicksoson.timecountdown.viewmodel.MainViewModel
 
 
@@ -31,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var menuBinding: MenuOptionBinding
     private lateinit var scheduleBinding: SetScheduleTimeBinding
+    private lateinit var setTimeViewBinding: SetTimmerBinding
 
     private var mInterstitialAd: InterstitialAd? = null
     private var tag = "MainActivity"
@@ -70,15 +70,15 @@ class MainActivity : AppCompatActivity() {
 
         //set time alert builder
         val builder = AlertDialog.Builder(this)
-        val setTimeView = layoutInflater.inflate(R.layout.set_timmer, null)
-        builder.setView(setTimeView)
+        val setTimeViewBinding = SetTimmerBinding.inflate(layoutInflater)
+        builder.setView(setTimeViewBinding.root)
 
         val alertDialog = builder.create()
 
 
         //initialize set time textView
-        val setSeconds = setTimeView.findViewById<TextView>(R.id.seconds_text)
-        val setMinutes = setTimeView.findViewById<TextView>(R.id.minute_text)
+        val setSeconds = setTimeViewBinding.secondsText
+        val setMinutes = setTimeViewBinding.minuteText
 
 
         //menu alert builder
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.isRunning.observe(this, { isRunning ->
             //Timer controls
             binding.timeControl.setOnClickListener {
-                if (isRunning) {
+                if (isRunning == true) {
                     //pause time
                     mainViewModel.pauseTimer()
 
@@ -136,7 +136,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        val list = mutableListOf<ScheduleItems>()
         val adapter = ScheduleAdapter()
 
 //        mainViewModel.isEnabled.observe(this, { state ->
@@ -164,35 +163,40 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.isRunning.observe(this, { isRunning ->
             //set start button on click listener
-            setTimeView.findViewById<Button>(R.id.start_bt).setOnClickListener {
-                if (isRunning) {
-                    mainViewModel.pauseTimer()
-                    mainViewModel.setRunning(false)
-                    mainViewModel.updateTime()
-                    mainViewModel.time.observe(this, { time ->
-                        binding.timer.textSize = 120F
-                        mainViewModel.startTimer(time, applicationContext)
-                        mainViewModel.paused(false)
-                    })
-                    mainViewModel.setTaskText("Quick countdown")
-                } else {
-                    mainViewModel.updateTime()
-                    mainViewModel.time.observe(this, { time ->
-                        if(time > 0){
+            setTimeViewBinding.startBt.setOnClickListener {
+                if (setMinutes.text.toString().toInt().plus(setSeconds.text.toString().toInt()) > 0){
+                    if (isRunning == true) {
+                        mainViewModel.pauseTimer()
+                        mainViewModel.setRunning(false)
+                        mainViewModel.updateTime()
+                        mainViewModel.time.observe(this, { time ->
                             binding.timer.textSize = 120F
                             mainViewModel.startTimer(time, applicationContext)
                             mainViewModel.paused(false)
-                        }
-                    })
-                    mainViewModel.setTaskText("Quick countdown")
+                        })
+                        mainViewModel.setTaskText("Quick countdown")
+                    } else if (isRunning == false || isRunning == null) {
+                        mainViewModel.updateTime()
+                        mainViewModel.time.observe(this, { time ->
+                            if(time > 0){
+                                binding.timer.textSize = 120F
+                                mainViewModel.startTimer(time, applicationContext)
+                                mainViewModel.paused(false)
+                            }
+                        })
+                        mainViewModel.setTaskText("Quick countdown")
+                    }
+                    //dismiss dialog
+                    alertDialog.dismiss()
+                }else{
+                    Toast.makeText(this, "must be at least 1sec", Toast.LENGTH_SHORT).show()
                 }
-                //dismiss dialog
-                alertDialog.dismiss()
+
             }
 
         })
         mainViewModel.isRunning.observe(this, {
-            if (it) {
+            if (it == true) {
                 //make quickCountdown button invisible at start time
                 binding.quickCountdown.visibility = INVISIBLE
                 binding.timeControl.setImageResource(R.drawable.ic_baseline_pause_24)
@@ -206,14 +210,14 @@ class MainActivity : AppCompatActivity() {
         })
 
         //initialize cancel button
-        val cancel = setTimeView.findViewById<ImageView>(R.id.cancel)
+        val cancel = setTimeViewBinding.cancel
         //set cancel button on click listener
         cancel.setOnClickListener {
             //dismiss dialog
             alertDialog.dismiss()
         }
         //increase seconds on click
-        setTimeView.findViewById<ImageView>(R.id.s_increment).setOnClickListener {
+        setTimeViewBinding.sIncrement.setOnClickListener {
             mainViewModel.sIncrement()
             mainViewModel.seconds.observe(this, {
                 setSeconds.text = it.toString()
@@ -221,7 +225,7 @@ class MainActivity : AppCompatActivity() {
 
         }
         //decrease seconds when clicked
-        setTimeView.findViewById<ImageView>(R.id.s_decrement).setOnClickListener {
+        setTimeViewBinding.sDecrement.setOnClickListener {
             mainViewModel.sDecrement()
             mainViewModel.seconds.observe(this, {
                 setSeconds.text = it.toString()
@@ -229,7 +233,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //increase minute on click
-        setTimeView.findViewById<ImageView>(R.id.m_increment).setOnClickListener {
+        setTimeViewBinding.mIncrement.setOnClickListener {
             mainViewModel.mIncrement()
             mainViewModel.minutes.observe(this, {
                 setMinutes.text = it.toString()
@@ -237,7 +241,7 @@ class MainActivity : AppCompatActivity() {
 
         }
         //decrease minutes when clicked
-        setTimeView.findViewById<ImageView>(R.id.m_decrement).setOnClickListener {
+        setTimeViewBinding.mDecrement.setOnClickListener {
             mainViewModel.mDecrement()
             mainViewModel.minutes.observe(this, {
                 setMinutes.text = it.toString()
